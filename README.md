@@ -1,43 +1,33 @@
 # InfinityCam
 
+## Components
 
-## Hardware Components
+<details>
+<summary>Hardware</summary>
 
 - Raspberry Pi 3b+ (or 4)
 - Raspberry Pi Camera Module V3 (or any compatible camera module)
 - 3.5" Touchscreen Display compatible with Raspberry Pi (or any compatible display)
 
-Other common components such as a power supply, microSD card, keyboard, mouse etc.
+Other common components such as a power supply, microSD card, keyboard, mouse, hdmi display etc.
+</details>
 
-## Software Components
+<details>
+<summary>Software</summary>
 
-- Raspbian OS (or any linux based OS), I am running a headless version of Raspi OS Lite, with xorg and i3 setup to auto run a python kivy app on running startx and stop i3 on pressing mod+x
+- Raspbian OS (or any linux based OS). I am running a headless version of Raspi OS Lite, with xorg and i3 setup to auto run a python kivy app on running startx and stop i3 on pressing `mod+x`
+- Python3
+- i3wm
+- Xorg
 
+</details>
 
 ## Setup
 
-The following steps assume you are in a headless raspi os lite environment. \ 
-With the user and wifi already setup before flashing with raspi imager.
+The following steps assume you are in a headless raspi os lite environment, with a logged in user and working internet.
 
-### Update and Upgrade
-
-```bash
-sudo apt update
-sudo apt upgrade
-```
-
-### picam v3
-
-No setup needed for 3b+. \ 
-Connect the camera module to the camera port using the ribbon cable. \ 
-
-pi 4: TBA
-
-### Touchscreen Display
-
-TBA
-
-### Wifi (from raspi-config)
+<details>
+<summary>Wifi (using raspi-config if not already setup)</summary>
     
 ```bash
 sudo raspi-config
@@ -47,7 +37,38 @@ sudo raspi-config
 - Select Wi-fi
 - Enter your SSID and password
 
-### Python GUI
+</details>
+
+<details>
+<summary>Update and Upgrade always</summary>
+
+```bash
+sudo apt update
+sudo apt upgrade
+```
+
+</details>
+
+<details>
+<summary>picam v3</summary>
+
+Connect the camera module to the camera port using the ribbon cable.
+
+No setup needed for 3b+.
+
+pi 4: TBA
+
+</details>
+
+<details>
+<summary>Touchscreen Display</summary>
+
+TBA
+
+</details>
+
+<details>
+<summary>Python GUI</summary>
 
 ```bash
 cd gui
@@ -57,7 +78,10 @@ venv/bin/python3 -m pip install -r requirements.txt
 venv/bin/python3 -m python3 main.py # will start the GUI in fullscreen if an xorg display is available
 ```
 
-### i3
+</details>
+
+<details>
+<summary>i3</summary>
 
 Add this to the end of your i3 config file (usually located at ~/.config/i3/config)
 
@@ -69,5 +93,8 @@ exec_always --no-startup-id python3 ~/camera.py # autostarts the gui when i3 sta
 To autostart i3 on boot, add a  cronjob (not recommended for dev setups)
 
 ```bash
-@reboot startx
+crontab -e
 ```
+and add `@reboot startx`
+
+</details>
