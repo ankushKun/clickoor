@@ -68,14 +68,10 @@ TBA
 </details>
 
 <details>
-<summary>Python GUI</summary>
+<summary>Python GUI (pygame)</summary>
 
 ```bash
-cd gui
-python3 -m venv venv
-source venv/bin/activate
-venv/bin/python3 -m pip install -r requirements.txt
-venv/bin/python3 -m python3 main.py # will start the GUI in fullscreen if an xorg display is available
+    python3 main.py
 ```
 
 </details>
