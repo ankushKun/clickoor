@@ -11,8 +11,11 @@ shutter = Button(5, hold_time=3)
 pygame.init()
 res = (720,480)
 pres = (720,480)
-ires = (1280,720)
-screen = pygame.display.set_mode(res)
+ires = (1920,1080)
+screen = pygame.display.set_mode(res,pygame.FULLSCREEN)
+
+screen.fill((0,0,0))
+pygame.display.update()
 
 cam = Picamera2()
 cam.preview_configuration.main.size = pres

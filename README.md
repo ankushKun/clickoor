@@ -86,6 +86,13 @@ bindsym $mod+x exec "i3-msg exit" # to stop the gui and exit i3
 exec_always --no-startup-id python3 ~/camera.py # autostarts the gui when i3 starts
 ```
 
+Set i3 as the default window manager with
+
+```
+sudo update-alternatives --config x-session-manager
+sudo update-alternatives --config x-window-manager
+```
+
 To autostart i3 on boot, add a  cronjob (not recommended for dev setups)
 
 ```bash
