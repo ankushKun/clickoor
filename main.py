@@ -53,5 +53,20 @@ class InfCam:
 
 
 if __name__ == "__main__":
+    # import arweave
+
+    # wallet = arweave.Wallet("wallet.json")
+    # print(wallet.address)
+
+    # t = arweave.Transaction(wallet, data=open("img.png", "rb").read())
+    # t.add_tag("App-Name", "Permacam")
+    # t.add_tag("Content-Type", "Image")
+    # t.sign()
+    # print(t.signature)
+    # print("price", t.get_price())
+    # r = t.send()
+    # with open("tx.json", "w") as f:
+    #     f.write(r)
+
     cam = InfCam()
     cam.run()

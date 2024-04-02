@@ -4,3 +4,6 @@ capture.png
 capture_high.png
 capture_low.png
 __pycache__
+seed.txt
+wallet.json
+tx.json
