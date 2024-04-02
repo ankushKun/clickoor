@@ -6,6 +6,8 @@ from globals import state
 from wifi import WifiScreen
 from home import HomeScreen
 from settings import SettingsScreen
+from wallet import WalletScreen
+from gallery import GalleryScreen
 
 
 class InfCam:
@@ -19,7 +21,9 @@ class InfCam:
         self.screens = {
             "Home": HomeScreen(self.manager, self.set_screen),
             "Settings": SettingsScreen(self.manager, self.set_screen),
-            "Wifi": WifiScreen(self.manager, self.set_screen)
+            "Wifi": WifiScreen(self.manager, self.set_screen),
+            "Wallet": WalletScreen(self.manager, self.set_screen),
+            "Gallery": GalleryScreen(self.manager, self.set_screen)
         }
         self.active_screen = "Home"
 

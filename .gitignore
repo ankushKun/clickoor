@@ -7,3 +7,5 @@ __pycache__
 seed.txt
 wallet.json
 tx.json
+captures/*.png
+captures/*.jpg
