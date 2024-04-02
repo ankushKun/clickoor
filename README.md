@@ -8,7 +8,7 @@
 - [ ] Wallet options for change seed, upload jwk file (through a webserver?)
 - [ ] Options for creation of jwk for first time users
 - [ ] Upload selected images from gallery to Arweave
-- [ ] 
+- [ ] Wifi connection from Wifi Screen
 
 ## Components
 
