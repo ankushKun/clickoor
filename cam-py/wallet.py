@@ -24,7 +24,7 @@ def run_cmd(cmd: str):
 
 
 try:
-    hn = run_cmd('hostname -I')
+    hn = run_cmd('hostname -I').split(" ")[0]
 except Exception as e:
     hn = run_cmd('hostname')
 

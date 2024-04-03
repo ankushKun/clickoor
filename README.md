@@ -11,13 +11,14 @@
 - [ ] Wifi connection from Wifi Screen
 - [ ] Image compression under 500kb
 - [ ] Turbo sdk integration (through changing api or ardrive-cli)
+- [ ] Pull latest code whenever there is an update
 
 ## Components
 
 <details>
 <summary>Hardware</summary>
 
-- Raspberry Pi 3b+ (or 4)
+- Raspberry Pi 4b
 - Raspberry Pi Camera Module V3 (or any compatible camera module)
 - 3.5" Touchscreen Display compatible with Raspberry Pi (or any compatible display)
 
@@ -27,10 +28,9 @@ Other common components such as a power supply, microSD card, keyboard, mouse, h
 <details>
 <summary>Software</summary>
 
-- Raspbian OS (or any linux based OS). I am running a headless version of Raspi OS Lite, with xorg and i3 setup to auto run a python kivy app on running startx and stop i3 on pressing `mod+x`
+- Raspbian OS (or any linux based OS). (I'm running 32bit one as I was getting some issues with 64 bit, maybe it's just me)
 - Python3
-- i3wm
-- Xorg
+- i3 (window manager)
 
 </details>
 
@@ -66,24 +66,29 @@ sudo apt upgrade
 
 Connect the camera module to the camera port using the ribbon cable.
 
-No setup needed for 3b+.
+No specific setup is needed
 
-pi 4: TBA
+There might be an error about `libEGL, DRI2: failed to authenticate`, fear not, the cam should be working, this error is related to the camera preview window that fails to run when you use a `rpicam-*` command.
 
 </details>
 
 <details>
 <summary>Touchscreen Display</summary>
 
-TBA
+```bash
+git clone https://github.com/goodtft/LCD-show
+cd LCD-show
+sudo ./LCD35-show
+```
 
-</details>
+Display should start working after an automatic reboot
 
-<details>
-<summary>Python GUI (pygame)</summary>
+Install the touchscreen calibrator
 
 ```bash
-    python3 main.py
+cd LCD-show
+sudo apt install ./xinput-calibrator_0.7.5-1_armhf.deb
+xinput_calibrator
 ```
 
 </details>
@@ -91,25 +96,41 @@ TBA
 <details>
 <summary>i3</summary>
 
+install i3wm
+
+```bash
+sudo apt install i3
+sudo apt remove i3lock # we dont want lockscreen
+```
+
+Configure to use i3 instead of lxde
+
+```bash
+cd /etc/xdg/lxsession/LXDE-pi
+```
+
+1. edit `desktop.conf` and set `window_manager=i3` (located at first line)
+2. edit `autostart` and comment all lines about lxpanel, pcmanfm and xscreensaver because we dont want lxde stuff in i3
+
+
 Add this to the end of your i3 config file (usually located at ~/.config/i3/config)
 
 ```bash
-bindsym $mod+x exec "i3-msg exit" # to stop the gui and exit i3
-exec_always --no-startup-id python3 ~/camera.py # autostarts the gui when i3 starts
+bindsym $mod+x exec "i3-msg exit" # win+x -> exit i3
+exec_always --no-startup-id bash infinitycam/start.sh # autostarts the camera gui when i3 starts
 ```
 
-Set i3 as the default window manager with
+</details>
 
-```
-sudo update-alternatives --config x-session-manager
-sudo update-alternatives --config x-window-manager
-```
-
-To autostart i3 on boot, add a  cronjob (not recommended for dev setups)
+<details>
+<summary>Python GUI (pygame)</summary>
 
 ```bash
-crontab -e
+git clone https://github.com/ankushKun/infinitycam
+cd infinitycam
+python3 -m venv --system-site-packages venv
+source venv/bin/activate
+pip3 install -r cam-py/requirements.txt
 ```
-and add `@reboot startx`
 
 </details>
