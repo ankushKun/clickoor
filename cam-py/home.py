@@ -37,8 +37,8 @@ class HomeScreen:
 
     def capture_and_save(self):
         print("capturing image")
-        self.last_filename = f"captures/IMG_{
-            datetime.now().strftime('%Y%m%d_%H%M%S')}.png"
+        ts = datetime.now().strftime('%Y%m%d_%H%M%S')
+        self.last_filename = f"captures/IMG_{ts}.png"
         if self.cam:
             self.cam.switch_mode_and_capture_file(
                 self.capture_config, self.last_filename)
