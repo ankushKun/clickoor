@@ -6,10 +6,27 @@ from globals import state
 import arweave
 from flask import Flask, render_template, request
 import multiprocessing
+import subprocess
+from python_graphql_client import GraphqlClient
 
 wallet = arweave.Wallet('wallet.json')
 
 app = Flask(__name__)
+
+
+def run_cmd(cmd: str):
+    res = subprocess.run(cmd, shell=True, capture_output=True)
+    res.check_returncode()
+    try:
+        return res.stdout.decode("utf-8").strip()
+    except subprocess.CalledProcessError as e:
+        return e.stderr.decode("utf-8").strip()
+
+
+try:
+    hn = run_cmd('hostname -I')
+except Exception as e:
+    hn = run_cmd('hostname')
 
 
 def valid_filename(filename):
@@ -23,21 +40,23 @@ def home():
 
 @app.route('/gallery')
 def gallery():
-    # Need to test
-    res = arweave.arql(wallet, {
-        "op": "and",
-        "expr1": {
-            "op": "equals",
-            "expr1": "from",
-            "expr2": wallet.address
-        },
-        "expr2": {
-            "op": "equals",
-            "expr1": "type",
-            "expr2": "image"
+    my_addr = wallet.address
+    client = GraphqlClient(endpoint="https://arweave.net/graphql")
+
+    query = """
+query {
+    transactions(owners:["8iD-Gy_sKx98oth27JhjjP2V_xUSIGqs_8-skb63YHg"]) {
+        edges {
+            node {
+                id
+            }
         }
-    })
-    print(res)
+    }
+}
+    """
+    data = client.execute(query=query)
+    print(data)
+
     return render_template('gallery.html')
 
 
@@ -56,7 +75,7 @@ def upload():
 
 
 def run_server():
-    app.run(host='0.0.0.0', port=80)
+    app.run(host='0.0.0.0', port=8080)  # was getting no perms on port 80
 
 
 class WalletScreen:
@@ -73,9 +92,13 @@ class WalletScreen:
         self.addres_text = UILabel(pygame.Rect(
             (0, 50), (state["res"][0], 50)), text=self.wallet.address, manager=self.manager)
         self.balance_text = UILabel(pygame.Rect(
-            (0, 100), (state["res"][0], 50)), text=f"Balance: {self.wallet.balance}", manager=self.manager)
-        self.portal_url = UILabel(pygame.Rect(
-            (0, 150), (state["res"][0], 50)), text="http://infinitycam.local", manager=self.manager)
+            (0, 100), (state["res"][0], 50)), text=f"Balance: {self.wallet.balance} AR", manager=self.manager)
+        self.portal_url_pre = UILabel(pygame.Rect(
+            (0, 150), (state["res"][0], 50)), text=f"http://infinitycam.local:8080", manager=self.manager)
+        UILabel(pygame.Rect(
+            (0, 170), (state["res"][0], 50)), text="or", manager=self.manager)
+        self.portal_url_dyn = UILabel(pygame.Rect(
+            (0, 190), (state["res"][0], 50)), text=f"http://{hn}:8080", manager=self.manager)
 
         self.flask_thread = multiprocessing.Process(target=run_server)
         self.flask_thread.start()

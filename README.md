@@ -9,6 +9,8 @@
 - [ ] Options for creation of jwk for first time users
 - [ ] Upload selected images from gallery to Arweave
 - [ ] Wifi connection from Wifi Screen
+- [ ] Image compression under 500kb
+- [ ] Turbo sdk integration (through changing api or ardrive-cli)
 
 ## Components
 

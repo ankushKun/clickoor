@@ -4,6 +4,7 @@ from pygame_gui import UIManager
 from pygame_gui.elements import UIButton, UIImage
 import sys
 from globals import state
+from datetime import datetime
 
 try:
     from picamera2 import Picamera2
@@ -36,9 +37,11 @@ class HomeScreen:
 
     def capture_and_save(self):
         print("capturing image")
+        self.last_filename = f"captures/IMG_{
+            datetime.now().strftime('%Y%m%d_%H%M%S')}.png"
         if self.cam:
             self.cam.switch_mode_and_capture_file(
-                self.capture_config, "img.png")
+                self.capture_config, self.last_filename)
         else:
             print("Not a raspberry pi device, skipping capture")
 
