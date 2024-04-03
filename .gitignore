@@ -6,6 +6,7 @@ capture_low.png
 __pycache__
 seed.txt
 wallet.json
+backup_wallet.json
 tx.json
 captures/*.png
 captures/*.jpg

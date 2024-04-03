@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Permacam</title>
+    <style>
+        * {
+            font-family: monospace;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Permacam</h1>
+    <p>Address: {{ data.address }}</p>
+    <p>Balance: {{ data.balance }}</p>
+    <hr />
+    <a href="/gallery">View permagallery</a>
+    <hr />
+    <h2>Upload a new Arweave JWK file</h2>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="jwk" id="jwk" accept=".json">
+        <input type="submit" value="Upload">
+    </form>
+</body>
+
+</html>
