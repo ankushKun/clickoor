@@ -50,7 +50,7 @@ class HomeScreen:
             while not u.is_complete:
                 u.upload_chunk()
                 c = u.pct_complete
-                d, t = u.uploaded_chunk, u.total_chunks
+                d, t = u.uploaded_chunks, u.total_chunks
                 print(f"{c}%, {d}/{t}")
                 self.progress_bar.set_current_progress(c)
             self.progress_bar.hide()

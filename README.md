@@ -130,7 +130,7 @@ git clone https://github.com/ankushKun/infinitycam
 cd infinitycam
 python3 -m venv --system-site-packages venv
 source venv/bin/activate
-pip3 install -r cam-py/requirements.txt
+pip3 install -r cam-py/requirements.txt --no-cache
 ```
 
 </details>
