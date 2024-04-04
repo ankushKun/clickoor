@@ -1,10 +1,12 @@
 import pygame
 import pygame_gui
 from pygame_gui import UIManager
-from pygame_gui.elements import UIButton, UIImage
+from pygame_gui.elements import UIButton, UIImage, UIProgressBar
 import sys
 from globals import state
 from datetime import datetime
+from arweave.arweave_lib import Wallet, Transaction
+from arweave.transaction_uploader import get_uploader
 
 try:
     from picamera2 import Picamera2
@@ -35,6 +37,25 @@ class HomeScreen:
             print("Not a raspberry pi device, skipping camera setup")
             self.show_preview = False
 
+    def upload_to_arweave(self, fpath: str):
+        wallet = Wallet('wallet.json')
+        with open(fpath, "rb", buffering=0) as file_handler:
+            tx = Transaction(
+                wallet, file_handler=file_handler, file_path=fpath)
+            tx.add_tag('Content-Type', 'image/png')
+            tx.add_tag("Type", "image")
+            tx.sign()
+            u = get_uploader(tx, file_handler)
+            self.progress_bar.show()
+            while not u.is_complete:
+                u.upload_chunk()
+                c = u.pct_complete
+                d, t = u.uploaded_chunk, u.total_chunks
+                print(f"{c}%, {d}/{t}")
+                self.progress_bar.set_current_progress(c)
+            self.progress_bar.hide()
+            return tx.id
+
     def capture_and_save(self):
         print("capturing image")
         ts = datetime.now().strftime('%Y%m%d_%H%M%S')
@@ -42,6 +63,10 @@ class HomeScreen:
         if self.cam:
             self.cam.switch_mode_and_capture_file(
                 self.capture_config, self.last_filename)
+            i = pygame.image.load(self.last_filename)
+            self.image_surface.blit(i, (0, 0))
+            tx = self.upload_to_arweave(self.last_filename)
+            print(f"uplaoded: https://arweave.net/{tx}")
         else:
             print("Not a raspberry pi device, skipping capture")
 
@@ -62,6 +87,11 @@ class HomeScreen:
         gallery_rect = pygame.Rect((0, 0), (100, 50))
         gallery_rect.bottomleft = (0, state["res"][1])
         self.back_btn = UIButton(gallery_rect, "Gallery", self.manager)
+
+        progress_rect = pygame.Rect((0, 0), (state["res"][0]//2, 50))
+        progress_rect.center = (state["res"][0]//2, state["res"][1]//2)
+        self.progress_bar = UIProgressBar(progress_rect, manager=self.manager)
+        self.progress_bar.hide()
 
     def run(self, event: pygame.event.EventType):
         if event.type == pygame_gui.UI_BUTTON_PRESSED:
