@@ -22,6 +22,7 @@ class HomeScreen:
         self.set_screen = set_screen
         self.image_surface = pygame.Surface(state["res"])
         self.cam = None
+        self.uploader = None
         try:
             cam = Picamera2()
             cam.preview_configuration.main.size = state["res"]
@@ -39,22 +40,29 @@ class HomeScreen:
 
     def upload_to_arweave(self, fpath: str):
         wallet = Wallet('wallet.json')
-        with open(fpath, "rb", buffering=0) as file_handler:
-            tx = Transaction(
-                wallet, file_handler=file_handler, file_path=fpath)
-            tx.add_tag('Content-Type', 'image/png')
-            tx.add_tag("Type", "image")
-            tx.sign()
-            u = get_uploader(tx, file_handler)
-            self.progress_bar.show()
-            while not u.is_complete:
-                u.upload_chunk()
-                c = u.pct_complete
-                d, t = u.uploaded_chunks, u.total_chunks
-                print(f"{c}%, {d}/{t}")
-                self.progress_bar.set_current_progress(c)
-            self.progress_bar.hide()
-            return tx.id
+        self.file_handler = open(fpath, "rb", buffering=0)
+        tx = Transaction(
+            wallet, file_handler=self.file_handler, file_path=fpath)
+        tx.add_tag('Content-Type', 'image/png')
+        tx.add_tag("Type", "image")
+        tx.sign()
+        b, p = wallet.balance, tx.get_price()
+        print(f"Balance: {b}")
+        print(f"Cost: {p}")
+        print(f"Balance after upload: {b-p}")
+        self.tx = tx
+        self.uploader = get_uploader(self.tx, self.file_handler)
+        # while not u.is_complete:
+        #     u.upload_chunk()
+        #     c = u.pct_complete
+        #     d, t = u.uploaded_chunks, u.total_chunks
+        #     print(f"{c}%, {d}/{t}")
+        #     self.progress_bar.set_current_progress(c)
+        #     self.manager.update(0.01)
+        #     # self.manager.draw_ui(self.screen)
+        #     pygame.display.update()
+        # self.progress_bar.hide()
+        # return tx.id
 
     def capture_and_save(self):
         print("capturing image")
@@ -65,8 +73,7 @@ class HomeScreen:
                 self.capture_config, self.last_filename)
             i = pygame.image.load(self.last_filename)
             self.image_surface.blit(i, (0, 0))
-            tx = self.upload_to_arweave(self.last_filename)
-            print(f"uplaoded: https://arweave.net/{tx}")
+            self.upload_to_arweave(self.last_filename)
         else:
             print("Not a raspberry pi device, skipping capture")
 
@@ -110,4 +117,15 @@ class HomeScreen:
             arr = self.cam.capture_array()
             img = pygame.image.frombuffer(arr.data, state["res"], 'RGB')
             self.image_surface.blit(img, (0, 0))
+        if self.uploader and not self.uploader.is_complete:
+            self.uploader.upload_chunk()
+            self.progress_bar.show()
+            self.progress_bar.set_current_progress(self.uploader.pct_complete)
+            print(
+                f"{self.uploader.pct_complete}% - {self.uploader.uploaded_chunks}/{self.uploader.total_chunks}")
+            if self.uploader.uploaded_chunks == self.uploader.total_chunks:
+                self.progress_bar.hide()
+                self.uploader = None
+                self.file_handler.close()
+                print(f"Uploaded https://arweave.net/{self.tx.id}")
         self.preview_image.set_image(self.image_surface)
