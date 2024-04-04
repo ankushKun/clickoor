@@ -47,9 +47,9 @@ class HomeScreen:
         tx.add_tag("Type", "image")
         tx.sign()
         b, p = wallet.balance, tx.get_price()
-        print(f"Balance: {b}")
-        print(f"Cost: {p}")
-        print(f"Balance after upload: {b-p}")
+        print(f"Balance   : {b}")
+        print(f"Cost      : {p}")
+        print(f"Remaining : {b-p}")
         self.tx = tx
         self.uploader = get_uploader(self.tx, self.file_handler)
         # while not u.is_complete:
@@ -71,8 +71,8 @@ class HomeScreen:
         if self.cam:
             self.cam.switch_mode_and_capture_file(
                 self.capture_config, self.last_filename)
-            i = pygame.image.load(self.last_filename)
-            self.image_surface.blit(i, (0, 0))
+            # i = pygame.image.load(self.last_filename)
+            # self.image_surface.blit(i, (0, 0))
             self.upload_to_arweave(self.last_filename)
         else:
             print("Not a raspberry pi device, skipping capture")
@@ -113,11 +113,12 @@ class HomeScreen:
 
     def run_non_event(self):
         self.image_surface.fill((30, 30, 30))
-        if self.cam and self.show_preview:
-            arr = self.cam.capture_array()
-            img = pygame.image.frombuffer(arr.data, state["res"], 'RGB')
-            self.image_surface.blit(img, (0, 0))
         if self.uploader and not self.uploader.is_complete:
+            i = pygame.image.load(self.last_filename)
+            iw, ih = i.get_size()
+            sf = min(state["res"][0] / iw, state["res"][1] / ih)
+            i = pygame.transform.scale(i, (iw*sf, ih*sf))
+            self.image_surface.blit(i, (0, 0))
             self.uploader.upload_chunk()
             self.progress_bar.show()
             self.progress_bar.set_current_progress(self.uploader.pct_complete)
@@ -128,4 +129,8 @@ class HomeScreen:
                 self.uploader = None
                 self.file_handler.close()
                 print(f"Uploaded https://arweave.net/{self.tx.id}")
+        elif self.cam and self.show_preview:
+            arr = self.cam.capture_array()
+            img = pygame.image.frombuffer(arr.data, state["res"], 'RGB')
+            self.image_surface.blit(img, (0, 0))
         self.preview_image.set_image(self.image_surface)
