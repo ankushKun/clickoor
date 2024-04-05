@@ -2,3 +2,4 @@ pygame_gui
 arweave-python-client
 flask
 python-graphql-client
+gunicorn
