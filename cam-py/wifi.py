@@ -105,11 +105,11 @@ class WifiScreen:
             elif btn == self.conn_btn:
                 print('Connecting')
                 # disconnect
-                run_cmd("nmcli dev wifi rescan")
-                connect_to_wifi(self.ssid_input.get_text(),
-                                self.pass_input.get_text())
+                # run_cmd("nmcli dev wifi rescan")
+                connect_to_wifi(self.ssid_input.get_text().strip(),
+                                self.pass_input.get_text().strip())
                 ssid = run_cmd("iwgetid -r")
-                if ssid.strip() == self.ssid_input.get_text():
+                if ssid.strip() == self.ssid_input.get_text().strip():
                     print("Connected")
                 else:
                     print("Failed to connect")

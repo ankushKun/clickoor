@@ -8,7 +8,7 @@ from globals import state
 from datetime import datetime
 from arweave.arweave_lib import Wallet, Transaction
 from arweave.transaction_uploader import get_uploader
-from lib.utils import run_cmd, get_wifi_signal_strength
+from lib.utils import run_cmd, get_wifi_signal_strength, has_internet_connection
 
 try:
     from picamera2 import Picamera2
@@ -77,7 +77,10 @@ class HomeScreen:
                 self.capture_config, self.last_filename)
             # i = pygame.image.load(self.last_filename)
             # self.image_surface.blit(i, (0, 0))
-            self.upload_to_arweave(self.last_filename)
+            if has_internet_connection():
+                self.upload_to_arweave(self.last_filename)
+            else:
+                print("No internet skipping upload")
         else:
             print("Not a raspberry pi device, skipping capture")
 

@@ -1,5 +1,6 @@
 import subprocess
 import time
+import requests
 
 
 def run_cmd(cmd: str):
@@ -37,8 +38,14 @@ def connect_to_wifi(ssid: str, password: str):
         password: The password for the WiFi network.
     """
 
-    subprocess.call(f"sudo iwconfig wlan0 essid {ssid}")
-    # subprocess.call(["sudo", "iwconfig", "wlan0", "key", password])
-    subprocess.call(f"sudo iwconfig wlan0 key s:{password}")
-    time.sleep(5)
-    subprocess.call(["sudo", "dhclient", "wlan0"])
+    r = run_cmd(f'sudo nmcli device wifi connect {ssid} password {password}')
+    print(r)
+    time.sleep(10)
+
+
+def has_internet_connection():
+    try:
+        response = requests.get("https://dns.tutorialspoint.com", timeout=3)
+        return True
+    except requests.ConnectionError:
+        return False
