@@ -16,14 +16,15 @@ class InfCam:
         self.running = True
         self.screen_change = False
         self.screen = pygame.display.set_mode(state["res"])
+        # pygame.mouse.set_visible(False)
         self.clock = pygame.time.Clock()
-        self.manager = UIManager(state["res"])
+        self.manager = UIManager(state["res"], theme_path="theme.json")
         self.screens = {
-            "Home": HomeScreen(self.manager, self.set_screen),
-            "Settings": SettingsScreen(self.manager, self.set_screen),
-            "Wifi": WifiScreen(self.manager, self.set_screen),
-            "Wallet": WalletScreen(self.manager, self.set_screen),
-            "Gallery": GalleryScreen(self.manager, self.set_screen)
+            "Home": HomeScreen(self.manager, self.screen, self.set_screen),
+            "Settings": SettingsScreen(self.manager, self.screen, self.set_screen),
+            "Wifi": WifiScreen(self.manager, self.screen, self.set_screen),
+            "Wallet": WalletScreen(self.manager, self.screen, self.set_screen),
+            "Gallery": GalleryScreen(self.manager, self.screen, self.set_screen)
         }
         self.active_screen = "Home"
 
@@ -42,7 +43,7 @@ class InfCam:
             self.screens[self.active_screen].setup()
             self.screen_change = False
             while not self.screen_change:
-                time_delta = self.clock.tick(60)/1000.0
+                time_delta = self.clock.tick(24)/1000.0
                 self.screens[self.active_screen].run_non_event()
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_q):

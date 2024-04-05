@@ -1,12 +1,14 @@
 import pygame
+from pygame import SurfaceType
 import pygame_gui
 from pygame_gui import UIManager
-from pygame_gui.elements import UIButton, UIImage, UIProgressBar
+from pygame_gui.elements import UIButton, UIImage, UIProgressBar, UILabel
 import sys
 from globals import state
 from datetime import datetime
 from arweave.arweave_lib import Wallet, Transaction
 from arweave.transaction_uploader import get_uploader
+from lib.utils import run_cmd, get_wifi_signal_strength
 
 try:
     from picamera2 import Picamera2
@@ -17,8 +19,9 @@ except ImportError:
 
 
 class HomeScreen:
-    def __init__(self, manager: UIManager, set_screen):
+    def __init__(self, manager: UIManager, screen: SurfaceType, set_screen):
         self.manager: UIManager = manager
+        self.screen: SurfaceType = screen
         self.set_screen = set_screen
         self.image_surface = pygame.Surface(state["res"])
         self.cam = None
@@ -45,6 +48,7 @@ class HomeScreen:
             wallet, file_handler=self.file_handler, file_path=fpath)
         tx.add_tag('Content-Type', 'image/png')
         tx.add_tag("Type", "image")
+        tx.add_tag("App-Name", "Permacam")
         tx.sign()
         b, p = wallet.balance, tx.get_price()
         print(f"Balance   : {b}")
@@ -78,27 +82,40 @@ class HomeScreen:
             print("Not a raspberry pi device, skipping capture")
 
     def setup(self):
+        self.manager.get_theme().load_theme("transparent_btn.json")
         pygame.display.set_caption('Permacam')
         self.preview_image = UIImage(pygame.Rect(
             (0, 0), (state["res"][0], state["res"][1])), self.image_surface, self.manager)
 
-        settings_rect = pygame.Rect((0, 0), (100, 50))
+        settings_rect = pygame.Rect((0, 0), (60, 60))
         settings_rect.topright = (state["res"][0], 0)
         self.open_settings_btn = UIButton(
             settings_rect, "Settings", self.manager)
+        self.open_settings_btn.normal_image = pygame.image.load(
+            "assets/settings.png")
+        UIImage(settings_rect, self.open_settings_btn.normal_image, self.manager)
 
-        capture_rect = pygame.Rect((0, 0), (100, 50))
+        capture_rect = pygame.Rect((0, 0), (100, 100))
         capture_rect.bottomright = (state["res"][0], state["res"][1])
-        self.capture_btn = UIButton(capture_rect, "Capture", self.manager)
+        self.capture_btn = UIButton(capture_rect, "", self.manager)
+        self.capture_btn.normal_image = pygame.image.load("assets/shutter.png")
+        UIImage(capture_rect, self.capture_btn.normal_image, self.manager)
 
-        gallery_rect = pygame.Rect((0, 0), (100, 50))
+        gallery_rect = pygame.Rect((0, 0), (60, 60))
         gallery_rect.bottomleft = (0, state["res"][1])
-        self.back_btn = UIButton(gallery_rect, "Gallery", self.manager)
+        self.gallery_btn = UIButton(gallery_rect, "Gallery", self.manager)
+        self.gallery_btn.normal_image = pygame.image.load("assets/gallery.png")
+        UIImage(gallery_rect, self.gallery_btn.normal_image, self.manager)
 
         progress_rect = pygame.Rect((0, 0), (state["res"][0]//2, 50))
         progress_rect.center = (state["res"][0]//2, state["res"][1]//2)
         self.progress_bar = UIProgressBar(progress_rect, manager=self.manager)
         self.progress_bar.hide()
+
+        wifi_rect = pygame.Rect((0, 0), (200, 50))
+        wifi_rect.topleft = (0, 0)
+        self.wifi_label = UILabel(
+            wifi_rect, "Wifi: " + run_cmd("iwgetid -r"), self.manager)
 
     def run(self, event: pygame.event.EventType):
         if event.type == pygame_gui.UI_BUTTON_PRESSED:
@@ -108,11 +125,14 @@ class HomeScreen:
                 self.set_screen("Settings")
             elif btn == self.capture_btn:
                 self.capture_and_save()
-            elif btn == self.back_btn:
+            elif btn == self.gallery_btn:
                 self.set_screen("Gallery")
 
     def run_non_event(self):
         self.image_surface.fill((30, 30, 30))
+        conn_name = run_cmd("iwgetid -r")
+        sig = get_wifi_signal_strength()
+        self.wifi_label.set_text(f"Wifi: {conn_name} | {sig}%")
         if self.uploader and not self.uploader.is_complete:
             i = pygame.image.load(self.last_filename)
             iw, ih = i.get_size()

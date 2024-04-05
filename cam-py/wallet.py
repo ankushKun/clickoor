@@ -1,4 +1,5 @@
 import pygame
+from pygame import SurfaceType
 import pygame_gui
 from pygame_gui.elements import UILabel, UIButton
 from pygame_gui import UIManager
@@ -70,12 +71,14 @@ def run_server():
 
 
 class WalletScreen:
-    def __init__(self, manager: UIManager, set_screen):
+    def __init__(self, manager: UIManager, screen: SurfaceType, set_screen):
         self.manager = manager
+        self.screen = screen
         self.set_screen = set_screen
 
     # Runs once
     def setup(self):
+        self.manager.get_theme().load_theme("normal.json")
         self.wallet = arweave.Wallet('wallet.json')
 
         self.back_btn = UIButton(pygame.Rect(

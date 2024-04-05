@@ -1,8 +1,10 @@
 import pygame
+from pygame import SurfaceType
 import pygame_gui
 from pygame_gui import UIManager
-from pygame_gui.elements import UITextEntryLine, UIButton
+from pygame_gui.elements import UITextEntryLine, UIButton, UILabel
 from globals import state
+from lib.utils import connect_to_wifi, run_cmd, get_wifi_signal_strength
 
 altkey = {
     '1': '!', '2': '@', '3': '#', '4': '$', '5': '%', '6': '^', '7': '&', '8': '*', '9': '(',  '0': ')', '-': '_', '=': '+',
@@ -33,12 +35,14 @@ characters = [
 
 
 class WifiScreen:
-    def __init__(self, manager: UIManager, set_screen):
+    def __init__(self, manager: UIManager, screen: SurfaceType, set_screen):
         self.manager: UIManager = manager
+        self.screen: SurfaceType = screen
         self.keylist = []
         self.caps = False
         self.focused_input = "SSID"
         self.set_screen = set_screen
+        self.wifi_name = run_cmd("iwgetid -r")
 
     def draw_keys(self):
         for i, row in enumerate(characters):
@@ -50,24 +54,30 @@ class WifiScreen:
                 self.keylist.append(key)
 
     def setup(self):
+        self.manager.get_theme().load_theme("normal.json")
         pygame.display.set_caption('Wifi Config')
         input_offset = -150
 
         self.draw_keys()
 
-        ssid_input_rect = pygame.Rect((-1, -1), (200, 50))
+        conn_rect = pygame.Rect((0, 0), (200, 50))
+        conn_rect.center = (state["res"][0]//2, 25)
+        self.conn_label = UILabel(
+            conn_rect, f"Wifi: {self.wifi_name}", self.manager)
+
+        ssid_input_rect = pygame.Rect((0, 0), (200, 50))
         ssid_input_rect.center = (
             state["res"][0]//2, state["res"][1]//2 + input_offset)
         self.ssid_input = UITextEntryLine(
             relative_rect=ssid_input_rect, manager=self.manager, placeholder_text="SSID")
 
-        pass_input_rect = pygame.Rect((-1, -1), (200, 50))
+        pass_input_rect = pygame.Rect((0, 0), (200, 50))
         pass_input_rect.center = (
             state["res"][0]//2, state["res"][1]//2 + (input_offset + 50))
         self.pass_input = UITextEntryLine(
             relative_rect=pass_input_rect, manager=self.manager, placeholder_text="Password")
 
-        btn_rect = pygame.Rect((-1, -1), (200, 50))
+        btn_rect = pygame.Rect((0, 0), (200, 50))
         btn_rect.center = (state["res"][0]//2, state["res"][1] //
                            2 + (input_offset + 100))
         self.conn_btn = UIButton(relative_rect=btn_rect,
@@ -94,6 +104,15 @@ class WifiScreen:
                     self.pass_input.set_text(self.pass_input.get_text()[:-1])
             elif btn == self.conn_btn:
                 print('Connecting')
+                # disconnect
+                run_cmd("nmcli dev wifi rescan")
+                connect_to_wifi(self.ssid_input.get_text(),
+                                self.pass_input.get_text())
+                ssid = run_cmd("iwgetid -r")
+                if ssid.strip() == self.ssid_input.get_text():
+                    print("Connected")
+                else:
+                    print("Failed to connect")
             elif btn == self.back_btn:
                 self.set_screen("Settings")
             else:
@@ -106,7 +125,10 @@ class WifiScreen:
                 print(btn.text)
 
     def run_non_event(self):
+        self.screen.fill((0, 0, 0))
         if self.ssid_input.is_focused:
             self.focused_input = "SSID"
         elif self.pass_input.is_focused:
             self.focused_input = "PASS"
+        self.conn_label.set_text(
+            f"Wifi: {run_cmd('iwgetid -r')} | {get_wifi_signal_strength()}%")

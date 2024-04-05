@@ -1,12 +1,14 @@
 import pygame
+from pygame import SurfaceType
 import pygame_gui
 from pygame_gui import UIManager
 
 
 # Example class template
 class SomeScreen:
-    def __init__(self, manager: UIManager, set_screen):
+    def __init__(self, manager: UIManager, screen: SurfaceType, set_screen):
         self.manager = manager
+        self.screen = screen
         self.set_screen = set_screen
 
     # Runs once
@@ -21,4 +23,5 @@ class SomeScreen:
 
     # Runs outside the events loop
     def run_non_event(self):
+        self.screen.fill((0, 0, 0))
         pass

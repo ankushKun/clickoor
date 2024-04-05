@@ -1,4 +1,5 @@
 import pygame
+from pygame import SurfaceType
 import pygame_gui
 from pygame_gui import UIManager
 from pygame_gui.elements import UIButton
@@ -6,12 +7,14 @@ from globals import state
 
 
 class SettingsScreen:
-    def __init__(self, manager: UIManager, set_screen):
+    def __init__(self, manager: UIManager, screen: SurfaceType, set_screen):
         self.manager = manager
+        self.screen = screen
         self.set_screen = set_screen
 
     # Runs once
     def setup(self):
+        self.manager.get_theme().load_theme("normal.json")
         back_rect = pygame.Rect((0, 0), (100, 50))
         back_rect.center = (state["res"][0]//2, state["res"][1]//2 - 50)
         self.back_btn = UIButton(back_rect, "Back", self.manager)
@@ -37,4 +40,4 @@ class SettingsScreen:
 
     # Runs outside the events loop
     def run_non_event(self):
-        pass
+        self.screen.fill((0, 0, 0))
