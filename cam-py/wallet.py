@@ -33,12 +33,12 @@ def valid_filename(filename):
 
 @app.route('/')
 def home():
-    return render_template('index.html', data={"address": wallet.address if wallet else "NO WALLET", "balance": wallet.balance if wallet else "NO WALLET"})
+    return render_template('index.html', data={"address": wallet.address if wallet else 'NO WALLET', "balance": wallet.balance if wallet else 'NO WALLET'})
 
 
 @app.route('/gallery')
 def gallery():
-    my_addr = wallet.address if wallet else "NO WALLET"
+    my_addr = wallet.address if wallet else 'NO WALLET'
     client = GraphqlClient(endpoint="https://arweave.net/graphql")
 
     query = """
@@ -95,9 +95,9 @@ class WalletScreen:
         self.back_btn = UIButton(pygame.Rect(
             (0, 0), (100, 50)), text="Back", manager=self.manager)
         self.addres_text = UILabel(pygame.Rect(
-            (0, 50), (state["res"][0], 50)), text=self.wallet.address if self.wallet else "NO WALLET", manager=self.manager)
+            (0, 50), (state["res"][0], 50)), text=self.wallet.address if self.wallet else 'NO WALLET', manager=self.manager)
         self.balance_text = UILabel(pygame.Rect(
-            (0, 100), (state["res"][0], 50)), text=f"Balance: {self.wallet.balance if self.wallet else "NO WALLET"} AR", manager=self.manager)
+            (0, 100), (state["res"][0], 50)), text=f"Balance: {self.wallet.balance if self.wallet else 'NO WALLET'} AR", manager=self.manager)
         self.portal_url_pre = UILabel(pygame.Rect(
             (0, 150), (state["res"][0], 50)), text=f"http://infinitycam.local:8080", manager=self.manager)
         UILabel(pygame.Rect(

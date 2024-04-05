@@ -4,6 +4,8 @@ import pygame_gui
 from pygame_gui import UIManager
 from pygame_gui.elements import UIButton, UIImage, UIProgressBar, UILabel
 import sys
+import os
+import pygame_gui.elements.ui_label
 from globals import state
 from datetime import datetime
 from arweave.arweave_lib import Wallet, Transaction
@@ -42,13 +44,17 @@ class HomeScreen:
             self.show_preview = False
 
     def upload_to_arweave(self, fpath: str):
+        if not os.path.exists("wallet.json"):
+            print("Wallet not found, skipping upload")
+            return
         wallet = Wallet('wallet.json')
         self.file_handler = open(fpath, "rb", buffering=0)
         tx = Transaction(
             wallet, file_handler=self.file_handler, file_path=fpath)
         tx.add_tag('Content-Type', 'image/png')
         tx.add_tag("Type", "image")
-        tx.add_tag("App-Name", "Permacam")
+        tx.add_tag("App-Name", state["app_name"])
+        tx.add_tag("App-Version", state["version"])
         tx.sign()
         b, p = wallet.balance, tx.get_price()
         print(f"Balance   : {b}")
@@ -86,12 +92,12 @@ class HomeScreen:
 
     def setup(self):
         self.manager.get_theme().load_theme("transparent_btn.json")
-        pygame.display.set_caption('Permacam')
+        pygame.display.set_caption(state["app_name"])
         self.preview_image = UIImage(pygame.Rect(
             (0, 0), (state["res"][0], state["res"][1])), self.image_surface, self.manager)
 
         settings_rect = pygame.Rect((0, 0), (60, 60))
-        settings_rect.topright = (state["res"][0], 0)
+        settings_rect.bottomleft = (0, state["res"][1])
         self.open_settings_btn = UIButton(
             settings_rect, "Settings", self.manager)
         self.open_settings_btn.normal_image = pygame.image.load(
@@ -99,13 +105,14 @@ class HomeScreen:
         UIImage(settings_rect, self.open_settings_btn.normal_image, self.manager)
 
         capture_rect = pygame.Rect((0, 0), (100, 100))
-        capture_rect.bottomright = (state["res"][0], state["res"][1])
+        capture_rect.bottomright = (state["res"][0], state["res"][1]//2 + 50)
         self.capture_btn = UIButton(capture_rect, "", self.manager)
         self.capture_btn.normal_image = pygame.image.load("assets/shutter.png")
+        self.capture_btn.border_width = 0
         UIImage(capture_rect, self.capture_btn.normal_image, self.manager)
 
         gallery_rect = pygame.Rect((0, 0), (60, 60))
-        gallery_rect.bottomleft = (0, state["res"][1])
+        gallery_rect.bottomright = (state["res"][0], state["res"][1])
         self.gallery_btn = UIButton(gallery_rect, "Gallery", self.manager)
         self.gallery_btn.normal_image = pygame.image.load("assets/gallery.png")
         UIImage(gallery_rect, self.gallery_btn.normal_image, self.manager)
@@ -115,10 +122,11 @@ class HomeScreen:
         self.progress_bar = UIProgressBar(progress_rect, manager=self.manager)
         self.progress_bar.hide()
 
-        wifi_rect = pygame.Rect((0, 0), (200, 50))
+        wifi_rect = pygame.Rect((0, 0), (-1, -1))
         wifi_rect.topleft = (0, 0)
         self.wifi_label = UILabel(
             wifi_rect, "Wifi: " + run_cmd("iwgetid -r"), self.manager)
+        self.wifi_label.text_horiz_alignment_padding = 6
 
     def run(self, event: pygame.event.EventType):
         if event.type == pygame_gui.UI_BUTTON_PRESSED:

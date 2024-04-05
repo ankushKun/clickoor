@@ -60,10 +60,11 @@ class WifiScreen:
 
         self.draw_keys()
 
-        conn_rect = pygame.Rect((0, 0), (200, 50))
-        conn_rect.center = (state["res"][0]//2, 25)
+        conn_rect = pygame.Rect((0, 0), (400, -1))
+        conn_rect.topright = (state["res"][0], 0)
         self.conn_label = UILabel(
             conn_rect, f"Wifi: {self.wifi_name}", self.manager)
+        self.conn_label
 
         ssid_input_rect = pygame.Rect((0, 0), (200, 50))
         ssid_input_rect.center = (

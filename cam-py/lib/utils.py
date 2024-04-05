@@ -45,7 +45,8 @@ def connect_to_wifi(ssid: str, password: str):
 
 def has_internet_connection():
     try:
-        response = requests.get("https://dns.tutorialspoint.com", timeout=3)
+        response = requests.get("https://google.com", timeout=3)
+        print(response.text)
         return True
     except requests.ConnectionError:
         return False

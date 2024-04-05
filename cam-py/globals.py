@@ -1,4 +1,5 @@
 state = {
+    "app_name": "Permacam",
     "version": "0.1.0",
     "commit": "",
     "res": (720, 480),
