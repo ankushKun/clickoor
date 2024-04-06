@@ -2,7 +2,7 @@ import subprocess
 import pygame
 from pygame import SurfaceType
 import pygame_gui
-from pygame_gui.elements import UILabel, UIButton
+from pygame_gui.elements import UILabel, UIButton, UISelectionList
 from pygame_gui import UIManager
 import arweave
 from flask import Flask, render_template, request
@@ -10,7 +10,7 @@ import multiprocessing
 from python_graphql_client import GraphqlClient
 from lib.utils import run_cmd
 import os
-from globals import state
+from globals import state, set_config, get_config
 
 if os.path.exists('wallet.json'):
     wallet = arweave.Wallet('wallet.json')
@@ -111,6 +111,9 @@ class WalletScreen:
         self.flask_process = subprocess.Popen(
             "cd cam-py && gunicorn -w 1 wallet:app -b 0.0.0.0:8080", shell=True)
 
+        self.upload_dropdown = UISelectionList(relative_rect=pygame.Rect(
+            (0, 240), (state["res"][0], 50)), manager=self.manager, default_selection=get_config("upload_mode") or "Manual Upload", item_list=["Auto Upload", "Manual Upload"])
+
     def run(self, event: pygame.event.EventType):
         if event.type == pygame_gui.UI_BUTTON_PRESSED:
             btn: UIButton = event.ui_element
@@ -118,6 +121,10 @@ class WalletScreen:
                 self.flask_process.terminate()
                 self.flask_process.kill()
                 self.set_screen("Settings")
+        if event.type == pygame_gui.UI_SELECTION_LIST_NEW_SELECTION:
+            selection_list: UISelectionList = event.ui_element
+            set_config("upload_mode", selection_list.get_single_selection())
+            print(selection_list.get_single_selection())
 
     def run_non_event(self):
         pass

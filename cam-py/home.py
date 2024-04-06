@@ -6,7 +6,7 @@ from pygame_gui.elements import UIButton, UIImage, UIProgressBar, UILabel
 import sys
 import os
 import pygame_gui.elements.ui_label
-from globals import state
+from globals import state, get_config
 from datetime import datetime
 from arweave.arweave_lib import Wallet, Transaction
 from arweave.transaction_uploader import get_uploader
@@ -33,7 +33,10 @@ class HomeScreen:
             cam.preview_configuration.main.size = state["res"]
             cam.preview_configuration.main.format = 'BGR888'
             cam.configure("preview")
-            cam.set_controls({"AfMode": controls.AfModeEnum.Continuous})
+            try:
+                cam.set_controls({"AfMode": controls.AfModeEnum.Continuous})
+            except:
+                print("No autofocus")
             self.cam = cam
             self.capture_config = cam.create_still_configuration(
                 {"size": state["image_res"]})
@@ -83,7 +86,7 @@ class HomeScreen:
                 self.capture_config, self.last_filename)
             # i = pygame.image.load(self.last_filename)
             # self.image_surface.blit(i, (0, 0))
-            if has_internet_connection():
+            if get_config("upload_mode") == "Auto Upload" and has_internet_connection():
                 self.upload_to_arweave(self.last_filename)
             else:
                 print("No internet skipping upload")
