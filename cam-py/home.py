@@ -85,14 +85,19 @@ class HomeScreen:
         ts = timegm(ts.utctimetuple())
         self.last_filename = f"captures/IMG_{ts}.png"
         if self.cam:
+            # I feel this is slow, TODO: capture_array and save as image (could be faster)
             self.cam.switch_mode_and_capture_file(
                 self.capture_config, self.last_filename)
             # i = pygame.image.load(self.last_filename)
             # self.image_surface.blit(i, (0, 0))
-            if get_config("upload_mode") == "Auto Upload" and has_internet_connection():
-                self.upload_to_arweave(self.last_filename)
+            m = get_config("upload_mode")
+            if m in "Auto Upload":
+                if has_internet_connection():
+                    self.upload_to_arweave(self.last_filename)
+                else:
+                    print("No internet connection, skipping upload")
             else:
-                print("No internet skipping upload")
+                print("Manual mode")
         else:
             print("Not a raspberry pi device, skipping capture")
 
