@@ -8,6 +8,7 @@ import os
 import pygame_gui.elements.ui_label
 from globals import state, get_config
 from datetime import datetime
+from calendar import timegm
 from arweave.arweave_lib import Wallet, Transaction
 from arweave.transaction_uploader import get_uploader
 from lib.utils import run_cmd, get_wifi_signal_strength, has_internet_connection
@@ -79,7 +80,9 @@ class HomeScreen:
 
     def capture_and_save(self):
         print("capturing image")
-        ts = datetime.now().strftime('%Y%m%d_%H%M%S')
+        # ts = datetime.now().strftime('%Y%m%d_%H%M%S')
+        ts = datetime.now()
+        ts = timegm(ts.utctimetuple())
         self.last_filename = f"captures/IMG_{ts}.png"
         if self.cam:
             self.cam.switch_mode_and_capture_file(
