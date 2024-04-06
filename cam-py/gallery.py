@@ -25,6 +25,9 @@ class GalleryScreen:
         self.local_images = list(
             filter(lambda x: x.endswith(".jpg") or x.endswith(".png"), img_list))
 
+        self.local_images.sort(key=lambda x: os.path.getmtime(
+            f"captures/{x}"), reverse=True)
+
         print(self.local_images)
         if len(self.local_images) > 0:
             self.img = pygame.image.load(

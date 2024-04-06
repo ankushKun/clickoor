@@ -8,7 +8,7 @@ state = {
     "version": "0.1.0",
     "commit": "",
     "res": (800, 480),
-    "image_res": (1080, 720)
+    "image_res": (1920, 1080)
 }
 
 
