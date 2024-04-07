@@ -111,10 +111,14 @@ class WalletScreen:
         self.flask_process = subprocess.Popen(
             "cd cam-py && gunicorn -w 1 wallet:app -b 0.0.0.0:8080", shell=True)
 
-        upload_selector_rect = pygame.Rect((0, 240), (state["res"][0]//2, 50))
+        self.selector_label = UILabel(pygame.Rect(
+            (0, 240), (state["res"][0]//2, 50)), text="Upload Mode", manager=self.manager)
+
+        upload_selector_rect = pygame.Rect(
+            (0, 290), (state["res"][0]//2, 50))
         upload_selector_rect.centerx = state["res"][0]//2
         self.upload_dropdown = UISelectionList(relative_rect=upload_selector_rect, manager=self.manager, default_selection=get_config(
-            "upload_mode") or "Manual Upload", item_list=["Auto Upload", "Manual Upload"])
+            "upload_mode") or "Manual Upload", item_list=["Auto Upload", "Manual Upload"], allow_double_clicks=False)
 
     def run(self, event: pygame.event.EventType):
         if event.type == pygame_gui.UI_BUTTON_PRESSED:

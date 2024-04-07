@@ -33,14 +33,15 @@ class HomeScreen:
             cam = Picamera2()
             cam.preview_configuration.main.size = state["res"]
             cam.preview_configuration.main.format = 'BGR888'
-            cam.configure("preview")
+            # cam.configure("preview")
             try:
                 cam.set_controls({"AfMode": controls.AfModeEnum.Continuous})
             except:
                 print("No autofocus")
             self.cam = cam
             self.capture_config = cam.create_still_configuration(
-                {"size": state["image_res"]})
+                {"size": state["image_res"]}, buffer_count=3)
+            self.cam.configure(self.capture_config)
             self.cam.start()
             self.show_preview = True
         except NameError:
@@ -86,8 +87,9 @@ class HomeScreen:
         self.last_filename = f"captures/IMG_{ts}.png"
         if self.cam:
             # I feel this is slow, TODO: capture_array and save as image (could be faster)
-            self.cam.switch_mode_and_capture_file(
-                self.capture_config, self.last_filename)
+            # self.cam.switch_mode_and_capture_file(
+            #     self.capture_config, self.last_filename)
+            self.cam.capture_file(self.last_filename)
             # i = pygame.image.load(self.last_filename)
             # self.image_surface.blit(i, (0, 0))
             m = get_config("upload_mode")
@@ -172,7 +174,10 @@ class HomeScreen:
                 self.file_handler.close()
                 print(f"Uploaded https://arweave.net/{self.tx.id}")
         elif self.cam and self.show_preview:
+            # this is state["image_res"] (1920,1080)
             arr = self.cam.capture_array()
-            img = pygame.image.frombuffer(arr.data, state["res"], 'RGB')
+            img = pygame.image.frombuffer(arr.data, state["image_res"], 'RGB')
+            img = pygame.transform.scale(img, state["res"])
+            # img = pygame.image.frombuffer(arr.data, state["res"], 'RGB')
             self.image_surface.blit(img, (0, 0))
         self.preview_image.set_image(self.image_surface)
