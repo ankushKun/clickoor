@@ -13,4 +13,4 @@ img.png
 captures/*.png
 captures/*.jpg
 .lgd-nfy0
-config.json
+# config.json
