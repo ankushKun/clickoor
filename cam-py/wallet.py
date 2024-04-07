@@ -65,7 +65,7 @@ def upload():
     if not valid_filename(filename):
         return "Invalid File, should be a valid wallet.json file"
     # Need to add more checks to verify if the wallet json is valid
-    jwk_file.save("wallet.json")
+    jwk_file.save("../wallet.json")
     global wallet
     # Init throws an error if wallet is invalid, catch this exception to use the old wallet or replace with new one
     wallet = arweave.Wallet('wallet.json')
