@@ -14,8 +14,10 @@ if [ "$ver" != "$cver" ]; then
     zip_url=$(curl -s https://api.github.com/repos/$repo/releases/latest | grep zipball_url | cut -d : -f 2,3 | tr -d , | tr -d \"  | cut -d , -f 1 | awk '{$1=$1};1')
     echo "downloading $zip_url"
     curl -L -o update.zip $zip_url
-    unzip -o update.zip -d .
+    unzip -o -j update.zip -d ./update
+    mv update/*/* .
     rm update.zip
+    rm -rf update
     echo $ver > current
 else
     echo "already up to date"
