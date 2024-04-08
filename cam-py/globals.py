@@ -4,7 +4,7 @@ import json
 config_path = "config.json"
 
 state = {
-    "app_name": "Permacam",
+    "app_name": "InfinityCam",
     "version": "0.1.0",
     "commit": "",
     "res": (800, 480),

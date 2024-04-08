@@ -2,13 +2,12 @@
 
 # TODO:
 
-- [ ] Sample image save for when running on a non-raspi device (only for testing)
-- [ ] Save each image as new timestamped file instead of overwriting
+- [x] Save each image as new timestamped file instead of overwriting
 - [ ] Gallery images view, incl. local and onchain images
-- [ ] Wallet options for change seed, upload jwk file (through a webserver?)
+- [x] Wallet options for change seed, upload jwk file (through a webserver?)
 - [ ] Options for creation of jwk for first time users
-- [ ] Upload selected images from gallery to Arweave
-- [ ] Wifi connection from Wifi Screen
+- [x] Upload selected images from gallery to Arweave
+- [x] Wifi connection from Wifi Screen
 - [ ] Image compression under 500kb
 - [ ] Turbo sdk integration (through changing api or ardrive-cli)
 - [ ] Pull latest code whenever there is an update

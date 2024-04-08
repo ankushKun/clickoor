@@ -3,6 +3,10 @@
 me=$(whoami)
 cd /home/$me/infinitycam
 
+# Install deps
+
+# sudo apt install i3
+
 # Create a virtual environment
 
 echo "Setting up virtual environment"
