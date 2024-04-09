@@ -1,3 +1,4 @@
+picamera2
 pygame_gui
 arweave-python-client
 flask

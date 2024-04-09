@@ -104,7 +104,7 @@ class HomeScreen:
             print("Not a raspberry pi device, skipping capture")
 
     def setup(self):
-        self.manager.get_theme().load_theme("transparent_btn.json")
+        self.manager.get_theme().load_theme("pygame-themes/transparent_btn.json")
         pygame.display.set_caption(state["app_name"])
         self.preview_image = UIImage(pygame.Rect(
             (0, 0), (state["res"][0], state["res"][1])), self.image_surface, self.manager)

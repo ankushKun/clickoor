@@ -3,33 +3,39 @@
 me=$(whoami)
 cd /home/$me/infinitycam
 
+
 # Install deps
 
-echo "Installing dependencies"
+#echo "Installing dependencies"
 
-sudo apt update
+#sudo apt update
+#sudo apt install git -y
 
 # Installing i3wm
-sudo apt install i3
-sudo apt remove i3lock # we dont want a lockscreen
+#sudo apt install i3 -y
+#sudo apt remove i3lock -y # we dont want a lockscreen
 
 # set i3wm as default window manager
-sudo update-alternatives --set x-session-manager /usr/bin/i3
-sudo update-alternatives --set x-window-manager /usr/bin/i3
+#sudo update-alternatives --set x-session-manager /usr/bin/i3
+#sudo update-alternatives --set x-window-manager /usr/bin/i3
 
-cp config/i3/config ~/.config/i3/config
+#mkdir ~/.config/i3
+#cp configuration/config ~/.config/i3/config
 
-cd /etc/xdg/lxsession/LXDE-pi
+#cd /etc/xdg/lxsession/LXDE-pi
 
 # in desktop.conf set window_manager=i3
-sed -i 's/window_manager=openbox-lxde/window_manager=i3/' desktop.conf
+#sudo sed -i 's/window_manager=openbox-lxde-pi/window_manager=i3/' desktop.conf
 
 # comment all lines in autostart
-sed -i 's/^/#/' autostart
+#sudo sed -i 's/^/#/' autostart
 
 ################################################
 
 cd /home/$me/infinitycam
+
+sudo apt-get install gcc python3-dev -y
+sudo apt install -y python3-libcamera python3-kms++ libcap-dev
 
 # Create a virtual environment
 
