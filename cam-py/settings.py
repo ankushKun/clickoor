@@ -14,7 +14,7 @@ class SettingsScreen:
 
     # Runs once
     def setup(self):
-        self.manager.get_theme().load_theme("normal.json")
+        self.manager.get_theme().load_theme("pygame-themes/normal.json")
         back_rect = pygame.Rect((0, 0), (100, 50))
         back_rect.center = (state["res"][0]//2, state["res"][1]//2 - 50)
         self.back_btn = UIButton(back_rect, "Back", self.manager)

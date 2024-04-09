@@ -54,7 +54,7 @@ class WifiScreen:
                 self.keylist.append(key)
 
     def setup(self):
-        self.manager.get_theme().load_theme("normal.json")
+        self.manager.get_theme().load_theme("pygame-themes/normal.json")
         pygame.display.set_caption('Wifi Config')
         input_offset = -150
 

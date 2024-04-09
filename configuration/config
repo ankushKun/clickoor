@@ -192,7 +192,7 @@ bar {
 }
 
 bindsym $mod+x exec "i3-msg exit"
-bindsym $mod+c exec "bash /home/pi/infinitycam/start.sh"
+bindsym $mod+c exec "bash /home/pi/infinitycam/scripts/start.sh"
 bindsym $mod+i exec "x-terminal-emulator -e nmtui"
-exec_always --no-startup-id "bash /home/pi/infinitycam/start.sh"
+exec_always --no-startup-id "bash /home/pi/infinitycam/scripts/start.sh"
 

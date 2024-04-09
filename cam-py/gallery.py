@@ -19,7 +19,7 @@ class GalleryScreen:
 
     # Runs once
     def setup(self):
-        self.manager.get_theme().load_theme("normal.json")
+        self.manager.get_theme().load_theme("pygame-themes/normal.json")
         self.im_num = 0
         img_list = os.listdir('captures')
         self.local_images = list(

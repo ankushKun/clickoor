@@ -86,7 +86,7 @@ class WalletScreen:
 
     # Runs once
     def setup(self):
-        self.manager.get_theme().load_theme("normal.json")
+        self.manager.get_theme().load_theme("pygame-themes/normal.json")
         if os.path.exists('wallet.json'):
             self.wallet = arweave.Wallet('wallet.json')
         else:
