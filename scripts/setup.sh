@@ -34,8 +34,8 @@ cd /home/$me/infinitycam
 
 cd /home/$me/infinitycam
 
-sudo apt-get install gcc python3-dev -y
-sudo apt install -y python3-libcamera python3-kms++ libcap-dev
+#sudo apt-get install gcc python3-dev -y
+#sudo apt install -y python3-libcamera python3-kms++ libcap-dev
 
 # Create a virtual environment
 
