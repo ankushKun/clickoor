@@ -48,5 +48,8 @@ source venv/bin/activate
 echo "Installing dependencies"
 pip3 install -r cam-py/requirements.txt --no-cache
 
+sudo cp configuration/camera.desktop /etc/xdg/autostart
+sudo cp configuration/camera.desktop /usr/share/applications
+
 echo "Setup Complete"
-echo "Run scripts/start.sh to start the camera"
+echo "Run Menu > Other > Infinity Camera"

@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Name=Infinity Camera
+Comment=Arweave India Infinity Camera
+GenericName=Infinity Camera
+Exec=bash /home/pi/infinitycam/scripts/start.sh
+Icon=org.xfce.camera
+Terminal=false
+StartupNotify=true
+Type=Application
+Categories=;
+MimeType=text/plain;
