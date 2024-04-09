@@ -5,7 +5,7 @@ import pygame_gui
 from pygame_gui.elements import UILabel, UIButton, UISelectionList
 from pygame_gui import UIManager
 import arweave
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, send_file
 import multiprocessing
 from python_graphql_client import GraphqlClient
 from lib.utils import run_cmd
@@ -71,6 +71,11 @@ def upload():
     wallet = arweave.Wallet('wallet.json')
     return "JWK Uploaded"
 
+
+@app.route('/download', methods=['GET'])
+def download():
+    # download wallet.json file
+    return send_file('../wallet.json', as_attachment=True)
 
 # def run_server():
 #     global pid

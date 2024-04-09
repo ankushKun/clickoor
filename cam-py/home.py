@@ -29,9 +29,9 @@ class HomeScreen:
         self.image_surface = pygame.Surface(state["res"])
         self.cam = None
         self.uploader = None
-        self.shutter = Button(5)
-        self.shutter.when_pressed = self.capture_and_save
         try:
+            self.shutter = Button(5)
+            self.shutter.when_pressed = self.capture_and_save
             cam = Picamera2()
             cam.preview_configuration.main.size = state["res"]
             cam.preview_configuration.main.format = 'BGR888'
