@@ -4,7 +4,9 @@ import pygame_gui
 from pygame_gui import UIManager
 from pygame_gui.elements import UIButton
 from globals import state
+import globals
 import os
+import sys
 
 
 class SettingsScreen:
@@ -28,9 +30,18 @@ class SettingsScreen:
         wallet_rect.center = (state["res"][0]//2, state["res"][1]//2 + 50)
         self.wallet_settings = UIButton(wallet_rect, "Wallet", self.manager)
 
+        exit_rect = pygame.Rect((0, 0), (100, 50))
+        exit_rect.center = (state["res"][0]//2, state["res"][1]//2 + 100)
+        self.exit_btn = UIButton(exit_rect, "Exit", self.manager)
+
         shutdown_rect = pygame.Rect((0, 0), (100, 50))
-        shutdown_rect.center = (state["res"][0]//2, state["res"][1]//2 + 100)
+        shutdown_rect.center = (state["res"][0]//2, state["res"][1]//2 + 150)
         self.shutdown_btn = UIButton(shutdown_rect, "Shutdown", self.manager)
+
+        version_rect = pygame.Rect((0, 0), (100, 50))
+        version_rect.topleft = (0, 0)
+        self.version_label = UIButton(
+            version_rect, globals.get_version(), self.manager)
 
     # Runs inside the event loop
     def run(self, event: pygame.event.EventType):
@@ -42,6 +53,9 @@ class SettingsScreen:
                 self.set_screen("Wifi")
             elif btn == self.wallet_settings:
                 self.set_screen("Wallet")
+            elif btn == self.exit_btn:
+                pygame.quit()
+                sys.exit()
             elif btn == self.shutdown_btn:
                 os.system("sudo shutdown now")
 
