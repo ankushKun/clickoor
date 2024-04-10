@@ -179,4 +179,16 @@ class GalleryScreen:
                 print(f"Uploaded https://arweave.net/{self.tx.id}")
                 os.remove(self.upload_filename)
                 self.upload_filename = None
+                img_list = os.listdir('captures')
+                self.local_images = list(
+                    filter(lambda x: x.endswith(".jpg") or x.endswith(".png"), img_list))
+                self.local_images.sort(key=lambda x: os.path.getmtime(
+                    f"captures/{x}"), reverse=True)
+                if len(self.local_images) > 0:
+                    self.im_num -= 1
+                else:
+                    self.img = pygame.image.frombytes(
+                        b'\x00\x00\x00\x00', (1, 1), 'RGBA'
+                    )
+                    self.image_p.set_image(self.img)
         self.status_label.set_text(self.status)
