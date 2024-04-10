@@ -13,16 +13,21 @@ import os
 from globals import state, set_config, get_config
 from threading import Thread
 
-wallet = []
+# wallet = []
 
-if os.path.exists('wallet.json'):
-    wallet = [arweave.Wallet('wallet.json')]
-else:
-    wallet = [None]
+# if os.path.exists('wallet.json'):
+#     if wallet == []:
+#         wallet.append(arweave.Wallet('wallet.json'))
+#     else:
+#         wallet[0] = arweave.Wallet('wallet.json')
+# else:
+#     if wallet == []:
+#         wallet.append(None)
+#     else:
+#         wallet[0] = None
 
 
 app = Flask(__name__)
-
 
 try:
     hn = run_cmd('hostname -I').split(" ")[0]
@@ -34,9 +39,15 @@ def valid_filename(filename):
     return filename.endswith('.json') and len(filename.split('.')) == 2
 
 
-@app.route('/')
+@app.route('/', methods=['GET'])
 def home():
-    w = wallet[0]
+    # if len(wallet) > 0:
+    #     w = wallet[0]
+    # else:
+    #     w = None
+    # print(w)
+    w = arweave.Wallet('wallet.json') if os.path.exists(
+        '../wallet.json') else None
     return render_template('index.html', data={"address": w.address if w else 'NO WALLET', "balance": w.balance if w else 'NO WALLET'})
 
 
