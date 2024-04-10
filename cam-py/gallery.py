@@ -22,6 +22,7 @@ class GalleryScreen:
         self.file_handler = None
         self.uploader = None
         self.wallet = None
+        self.status = ""
 
     # Runs once
     def setup(self):
@@ -69,6 +70,12 @@ class GalleryScreen:
         progress_rect.center = (state["res"][0]//2, state["res"][1]//2)
         self.progress_bar = UIProgressBar(progress_rect, manager=self.manager)
         self.progress_bar.hide()
+
+        status_rect = pygame.Rect((0, 0), (state["res"][0], 50))
+        status_rect.bottomleft = (0, state["res"][1])
+        self.status_label = UILabel(status_rect, self.status, self.manager)
+        # set background color
+        self.status_label.set_text_scale(1.1)
 
     # Runs inside the event loop
 
@@ -118,6 +125,7 @@ class GalleryScreen:
     def upload_to_arweave(self, fpath: str):
         if not self.wallet:
             print("Wallet not found, skipping upload")
+            self.status = "Wallet not found, skipping upload"
             return
 
         self.file_handler = open(fpath, "rb", buffering=0)
@@ -150,7 +158,6 @@ class GalleryScreen:
         self.screen.fill((0, 0, 0))
         self.img_counter.set_text(
             f"Image {self.im_num+1} / {len(self.local_images)}")
-
         if self.uploader and not self.uploader.is_complete:
             i = pygame.image.load(self.upload_filename)
             iw, ih = i.get_size()
@@ -169,3 +176,4 @@ class GalleryScreen:
                 print(f"Uploaded https://arweave.net/{self.tx.id}")
                 os.remove(self.upload_filename)
                 self.upload_filename = None
+        self.status_label.set_text(self.status)
