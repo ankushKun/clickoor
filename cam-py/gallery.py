@@ -1,12 +1,14 @@
 import pygame
 from pygame import SurfaceType
 import pygame_gui
-from pygame_gui.elements import UIButton, UIImage, UILabel
+from pygame_gui.elements import UIButton, UIImage, UILabel, UIProgressBar
 from pygame_gui import UIManager
 from globals import state
 import os
 import requests
 from io import BytesIO
+from arweave.arweave_lib import Wallet, Transaction
+from arweave.transaction_uploader import get_uploader
 
 
 class GalleryScreen:
@@ -16,6 +18,9 @@ class GalleryScreen:
         self.set_screen = set_screen
         self.im_num = 0
         self.local_images = []
+        self.upload_filename = None
+        self.file_handler = None
+        self.uploader = None
 
     # Runs once
     def setup(self):
@@ -55,6 +60,11 @@ class GalleryScreen:
             (state["res"][0] - 400, 0), (100, 50)), text="Upload", manager=self.manager)
         self.img_counter = UILabel(pygame.Rect(
             (0, state["res"][1] - 50), (state["res"][0], 50)), text=f"Image {self.im_num+1} / {len(self.local_images)}", manager=self.manager)
+
+        progress_rect = pygame.Rect((0, 0), (state["res"][0]//2, 50))
+        progress_rect.center = (state["res"][0]//2, state["res"][1]//2)
+        self.progress_bar = UIProgressBar(progress_rect, manager=self.manager)
+        self.progress_bar.hide()
 
     # Runs inside the event loop
 
@@ -98,10 +108,60 @@ class GalleryScreen:
                         self.image_p.set_image(self.img)
             if event.ui_element == self.upload_btn:
                 print("Uploading")
+                self.upload_to_arweave(
+                    f"captures/{self.local_images[self.im_num]}")
 
-    # Runs outside the events loop
+    def upload_to_arweave(self, fpath: str):
+        if not self.wallet:
+            print("Wallet not found, skipping upload")
+            return
+
+        self.file_handler = open(fpath, "rb", buffering=0)
+        tx = Transaction(
+            self.wallet, file_handler=self.file_handler, file_path=fpath)
+        tx.add_tag('Content-Type', 'image/png')
+        tx.add_tag("Type", "image")
+        tx.add_tag("App-Name", globals.state["app_name"])
+        tx.add_tag("App-Version", globals.get_version())
+        tx.sign()
+        # b, p = self.wallet.balance, tx.get_price()
+        # print(f"Balance   : {b}")
+        # print(f"Cost      : {p}")
+        # print(f"Remaining : {b-p}")
+        self.tx = tx
+        self.uploader = get_uploader(self.tx, self.file_handler)
+        # while not u.is_complete:
+        #     u.upload_chunk()
+        #     c = u.pct_complete
+        #     d, t = u.uploaded_chunks, u.total_chunks
+        #     print(f"{c}%, {d}/{t}")
+        #     self.progress_bar.set_current_progress(c)
+        #     self.manager.update(0.01)
+        #     # self.manager.draw_ui(self.screen)
+        #     pygame.display.update()
+        # self.progress_bar.hide()
+        # return tx.id
 
     def run_non_event(self):
         self.screen.fill((0, 0, 0))
         self.img_counter.set_text(
             f"Image {self.im_num+1} / {len(self.local_images)}")
+
+        if self.uploader and not self.uploader.is_complete:
+            i = pygame.image.load(self.upload_filename)
+            iw, ih = i.get_size()
+            sf = min(state["res"][0] / iw, state["res"][1] / ih)
+            i = pygame.transform.scale(i, (iw*sf, ih*sf))
+            self.image_surface.blit(i, (0, 0))
+            self.uploader.upload_chunk()
+            self.progress_bar.show()
+            self.progress_bar.set_current_progress(self.uploader.pct_complete)
+            print(
+                f"{self.uploader.pct_complete}% - {self.uploader.uploaded_chunks}/{self.uploader.total_chunks}")
+            if self.uploader.uploaded_chunks == self.uploader.total_chunks:
+                self.progress_bar.hide()
+                self.uploader = None
+                self.file_handler.close()
+                print(f"Uploaded https://arweave.net/{self.tx.id}")
+                os.remove(self.upload_filename)
+                self.upload_filename = None
