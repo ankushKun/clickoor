@@ -21,9 +21,13 @@ class GalleryScreen:
         self.upload_filename = None
         self.file_handler = None
         self.uploader = None
+        self.wallet = None
 
     # Runs once
     def setup(self):
+        if os.path.exists('wallet.json'):
+            self.wallet = Wallet('wallet.json')
+
         self.manager.get_theme().load_theme("pygame-themes/normal.json")
         self.im_num = 0
         img_list = os.listdir('captures')
