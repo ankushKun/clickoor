@@ -126,7 +126,7 @@ class GalleryScreen:
                             self.img, (int(self.img.get_width()*sf), int(self.img.get_height()*sf)))
                         self.image_p.set_image(self.img)
             if event.ui_element == self.upload_btn:
-                if has_internet_connection():
+                if has_internet_connection() and len(self.local_images) > 0:
                     self.upload_filename = "captures/" + \
                         self.local_images[self.im_num]
                     self.status = "Uploading..."
