@@ -11,9 +11,12 @@ from python_graphql_client import GraphqlClient
 from lib.utils import run_cmd
 import os
 from globals import state, set_config, get_config
+from threading import Thread
 
 if os.path.exists('wallet.json'):
-    wallet = arweave.Wallet('wallet.json')
+    def load_wallet():
+        wallet = arweave.Wallet('wallet.json')
+        Thread(target=load_wallet).start()
 else:
     wallet = None
 

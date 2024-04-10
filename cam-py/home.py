@@ -13,6 +13,7 @@ from calendar import timegm
 from arweave.arweave_lib import Wallet, Transaction
 from arweave.transaction_uploader import get_uploader
 from lib.utils import run_cmd, get_wifi_signal_strength, has_internet_connection
+from threading import Thread
 
 try:
     from picamera2 import Picamera2
@@ -115,7 +116,10 @@ class HomeScreen:
         pygame.display.set_caption(state["app_name"])
         if os.path.exists("wallet.json"):
             self.status = "Wallet found"
-            self.wallet = Wallet('wallet.json')
+
+            def load_wallet():
+                self.wallet = Wallet('wallet.json')
+            Thread(target=load_wallet).start()
         else:
             self.status = "No wallet"
             self.wallet = None

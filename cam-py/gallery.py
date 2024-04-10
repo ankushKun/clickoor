@@ -10,6 +10,7 @@ import requests
 from io import BytesIO
 from arweave.arweave_lib import Wallet, Transaction
 from arweave.transaction_uploader import get_uploader
+from threading import Thread
 
 
 class GalleryScreen:
@@ -28,7 +29,9 @@ class GalleryScreen:
     # Runs once
     def setup(self):
         if os.path.exists('wallet.json'):
-            self.wallet = Wallet('wallet.json')
+            def load_wallet():
+                self.wallet = Wallet('wallet.json')
+            Thread(target=load_wallet).start()
 
         self.manager.get_theme().load_theme("pygame-themes/normal.json")
         self.im_num = 0
