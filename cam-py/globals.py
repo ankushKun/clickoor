@@ -12,8 +12,11 @@ state = {
 
 
 def get_version():
-    with open("current", "r") as f:
-        return f.read().strip()
+    try:
+        with open("current", "r") as f:
+            return f.read().strip()
+    except:
+        return "Unknown"
 
 
 def get_config(key: str):
