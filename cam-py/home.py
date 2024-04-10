@@ -158,6 +158,9 @@ class HomeScreen:
             status_rect, self.status, self.manager)
         self.status_label.set_text_scale(1.1)
 
+        if not os.path.exists("wallet.json"):
+            self.status = "No wallet"
+
     def run(self, event: pygame.event.EventType):
         if event.type == pygame_gui.UI_BUTTON_PRESSED:
             btn: UIButton = event.ui_element
@@ -171,8 +174,6 @@ class HomeScreen:
 
     def run_non_event(self):
         self.image_surface.fill((30, 30, 30))
-        if not os.path.exists("wallet.json"):
-            self.status = "No wallet"
         try:
             conn_name = run_cmd("iwgetid -r")
             sig = get_wifi_signal_strength()
