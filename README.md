@@ -2,15 +2,17 @@
 
 # TODO:
 
-- [x] Save each image as new timestamped file instead of overwriting
-- [ ] Gallery images view, incl. local and onchain images
-- [x] Wallet options for change seed, upload jwk file (through a webserver?)
 - [ ] Options for creation of jwk for first time users
+- [ ] Turbo sdk integration (through ardrive-cli?)
+- [ ] Image compression under 500kb
+- [x] Save each image as new timestamped file instead of overwriting
+- [x] Gallery images view, incl. local and onchain images
+- [x] Wallet options for change seed, upload jwk file (through a webserver)
 - [x] Upload selected images from gallery to Arweave
 - [x] Wifi connection from Wifi Screen
-- [ ] Image compression under 500kb
-- [ ] Turbo sdk integration (through changing api or ardrive-cli)
-- [ ] Pull latest code whenever there is an update
+- [x] Pull latest code whenever there is an update
+
+## Dont bother reading the below setup info (need to update)
 
 ## Components
 
