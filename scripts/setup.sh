@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 
 me=$(whoami)
-cd /home/$me/infinitycam
+cd /home/$me/clickoor
 
 
 # Install deps
@@ -32,7 +32,7 @@ cd /home/$me/infinitycam
 
 ################################################
 
-cd /home/$me/infinitycam
+cd /home/$me/clickoor
 
 #sudo apt-get install gcc python3-dev -y
 #sudo apt install -y python3-libcamera python3-kms++ libcap-dev
@@ -52,4 +52,4 @@ sudo cp configuration/camera.desktop /etc/xdg/autostart
 sudo cp configuration/camera.desktop /usr/share/applications
 
 echo "Setup Complete"
-echo "Run Menu > Other > Infinity Camera"
+echo "Run Menu > Other > Clickoor Camera"

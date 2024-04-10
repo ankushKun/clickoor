@@ -7,6 +7,7 @@ import sys
 import os
 import pygame_gui.elements.ui_label
 from globals import state, get_config
+import globals
 from datetime import datetime
 from calendar import timegm
 from arweave.arweave_lib import Wallet, Transaction
@@ -29,6 +30,7 @@ class HomeScreen:
         self.image_surface = pygame.Surface(state["res"])
         self.cam = None
         self.uploader = None
+        self.status = ""
         try:
             self.shutter = Button(5)
             self.shutter.when_pressed = self.capture_and_save
@@ -51,22 +53,22 @@ class HomeScreen:
             self.show_preview = False
 
     def upload_to_arweave(self, fpath: str):
-        if not os.path.exists("wallet.json"):
+        if not self.wallet:
             print("Wallet not found, skipping upload")
             return
-        wallet = Wallet('wallet.json')
+
         self.file_handler = open(fpath, "rb", buffering=0)
         tx = Transaction(
-            wallet, file_handler=self.file_handler, file_path=fpath)
+            self.wallet, file_handler=self.file_handler, file_path=fpath)
         tx.add_tag('Content-Type', 'image/png')
         tx.add_tag("Type", "image")
-        tx.add_tag("App-Name", state["app_name"])
-        tx.add_tag("App-Version", state["version"])
+        tx.add_tag("App-Name", globals.state["app_name"])
+        tx.add_tag("App-Version", globals.get_version())
         tx.sign()
-        b, p = wallet.balance, tx.get_price()
-        print(f"Balance   : {b}")
-        print(f"Cost      : {p}")
-        print(f"Remaining : {b-p}")
+        # b, p = self.wallet.balance, tx.get_price()
+        # print(f"Balance   : {b}")
+        # print(f"Cost      : {p}")
+        # print(f"Remaining : {b-p}")
         self.tx = tx
         self.uploader = get_uploader(self.tx, self.file_handler)
         # while not u.is_complete:
@@ -97,6 +99,7 @@ class HomeScreen:
             m = get_config("upload_mode")
             if m in "Auto Upload":
                 if has_internet_connection():
+                    self.status = "Uploading..."
                     self.upload_to_arweave(self.last_filename)
                 else:
                     print("No internet connection, skipping upload")
@@ -108,6 +111,10 @@ class HomeScreen:
     def setup(self):
         self.manager.get_theme().load_theme("pygame-themes/transparent_btn.json")
         pygame.display.set_caption(state["app_name"])
+        if os.path.exists("wallet.json"):
+            self.wallet = Wallet('wallet.json')
+        else:
+            self.wallet = None
         self.preview_image = UIImage(pygame.Rect(
             (0, 0), (state["res"][0], state["res"][1])), self.image_surface, self.manager)
 
@@ -143,6 +150,12 @@ class HomeScreen:
             wifi_rect, "Wifi: " + run_cmd("iwgetid -r"), self.manager)
         self.wifi_label.text_horiz_alignment_padding = 6
 
+        status_rect = pygame.Rect((0, 0), (-1, -1))
+        status_rect.topright = (state["res"][0], state["res"][1])
+        self.status_label = UILabel(
+            status_rect, self.status, self.manager)
+        self.status_label.text_horiz_alignment_padding = 6
+
     def run(self, event: pygame.event.EventType):
         if event.type == pygame_gui.UI_BUTTON_PRESSED:
             btn: UIButton = event.ui_element
@@ -156,9 +169,14 @@ class HomeScreen:
 
     def run_non_event(self):
         self.image_surface.fill((30, 30, 30))
-        conn_name = run_cmd("iwgetid -r")
-        sig = get_wifi_signal_strength()
-        self.wifi_label.set_text(f"Wifi: {conn_name} | {sig}%")
+        self.status_label.set_text(self.status)
+        try:
+            conn_name = run_cmd("iwgetid -r")
+            sig = get_wifi_signal_strength()
+            self.wifi_label.set_text(f"Wifi: {conn_name} | {sig}%")
+        except Exception as e:
+            print(e)
+            self.wifi_label.set_text("Wifi: Not Connected")
         if self.uploader and not self.uploader.is_complete:
             i = pygame.image.load(self.last_filename)
             iw, ih = i.get_size()
@@ -175,6 +193,7 @@ class HomeScreen:
                 self.uploader = None
                 self.file_handler.close()
                 print(f"Uploaded https://arweave.net/{self.tx.id}")
+                os.remove(self.last_filename)
         elif self.cam and self.show_preview:
             # this is state["image_res"] (1920,1080)
             arr = self.cam.capture_array()

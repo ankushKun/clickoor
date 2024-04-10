@@ -39,23 +39,23 @@ def home():
 @app.route('/gallery')
 def gallery():
     my_addr = wallet.address if wallet else 'NO WALLET'
-    client = GraphqlClient(endpoint="https://arweave.net/graphql")
+#     client = GraphqlClient(endpoint="https://arweave.net/graphql")
 
-    query = """
-query {
-    transactions(owners:["8iD-Gy_sKx98oth27JhjjP2V_xUSIGqs_8-skb63YHg"]) {
-        edges {
-            node {
-                id
-            }
-        }
-    }
-}
-    """
-    data = client.execute(query=query)
-    print(data)
+#     query = """
+# query {
+#     transactions(owners:["8iD-Gy_sKx98oth27JhjjP2V_xUSIGqs_8-skb63YHg"]) {
+#         edges {
+#             node {
+#                 id
+#             }
+#         }
+#     }
+# }
+#     """
+#     data = client.execute(query=query)
+#     print(data)
 
-    return render_template('gallery.html', data=data)
+    return render_template('gallery.html', data="")
 
 
 @app.route('/upload', methods=['POST'])
@@ -68,7 +68,7 @@ def upload():
     jwk_file.save("../wallet.json")
     global wallet
     # Init throws an error if wallet is invalid, catch this exception to use the old wallet or replace with new one
-    wallet = arweave.Wallet('wallet.json')
+    wallet = arweave.Wallet('../wallet.json')
     return "JWK Uploaded"
 
 
@@ -91,11 +91,15 @@ class WalletScreen:
 
     # Runs once
     def setup(self):
+        global wallet
+        os.system("fuser -k 8080/tcp")
         self.manager.get_theme().load_theme("pygame-themes/normal.json")
         if os.path.exists('wallet.json'):
             self.wallet = arweave.Wallet('wallet.json')
+            wallet = self.wallet
         else:
             self.wallet = None
+            wallet = None
 
         self.back_btn = UIButton(pygame.Rect(
             (0, 0), (100, 50)), text="Back", manager=self.manager)
@@ -104,7 +108,7 @@ class WalletScreen:
         self.balance_text = UILabel(pygame.Rect(
             (0, 100), (state["res"][0], 50)), text=f"Balance: {self.wallet.balance if self.wallet else 'NO WALLET'} AR", manager=self.manager)
         self.portal_url_pre = UILabel(pygame.Rect(
-            (0, 150), (state["res"][0], 50)), text=f"http://infinitycam.local:8080", manager=self.manager)
+            (0, 150), (state["res"][0], 50)), text=f"http://clickoor.local:8080", manager=self.manager)
         UILabel(pygame.Rect(
             (0, 170), (state["res"][0], 50)), text="or", manager=self.manager)
         self.portal_url_dyn = UILabel(pygame.Rect(
@@ -131,6 +135,7 @@ class WalletScreen:
             if btn == self.back_btn:
                 self.flask_process.terminate()
                 self.flask_process.kill()
+                os.system("fuser -k 8080/tcp")
                 self.set_screen("Settings")
         if event.type == pygame_gui.UI_SELECTION_LIST_NEW_SELECTION:
             selection_list: UISelectionList = event.ui_element

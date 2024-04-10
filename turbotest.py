@@ -12,7 +12,7 @@ with open("captures/compressed.png", "rb", buffering=0) as file_handler:
     # tx.api_url = "https://turbo.ardrive.io"
     tx.add_tag('Content-Type', 'image/png')
     tx.add_tag("Type", "image")
-    tx.add_tag("App-Name", "InfinityCam")
+    tx.add_tag("App-Name", "Clickoor")
     print("signing")
     tx.sign()
     print("signed, price: ", tx.get_price())

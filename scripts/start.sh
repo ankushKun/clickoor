@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 
 me=$(whoami)
-cd /home/$me/infinitycam
+cd /home/$me/clickoor
 
 bash scripts/update.sh
 

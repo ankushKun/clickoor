@@ -100,6 +100,7 @@ class GalleryScreen:
                 print("Uploading")
 
     # Runs outside the events loop
+
     def run_non_event(self):
         self.screen.fill((0, 0, 0))
         self.img_counter.set_text(

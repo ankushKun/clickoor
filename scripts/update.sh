@@ -1,12 +1,12 @@
 #!/usr/bin/bash
 
 me=$(whoami)
-cd /home/$me/infinitycam
+cd /home/$me/clickoor
 
 # Check for internet connection using ping
 if ping -c 1 google.com &> /dev/null; then
     # online
-    repo="ankushKun/infinitycam"
+    repo="ankushKun/clickoor"
 
     cver=$(cat current)
     echo "current version: $cver"

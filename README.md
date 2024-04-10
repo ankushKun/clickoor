@@ -1,4 +1,4 @@
-# InfinityCam
+# Clickoor
 
 # TODO:
 

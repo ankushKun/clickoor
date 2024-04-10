@@ -131,5 +131,9 @@ class WifiScreen:
             self.focused_input = "SSID"
         elif self.pass_input.is_focused:
             self.focused_input = "PASS"
-        self.conn_label.set_text(
-            f"Wifi: {run_cmd('iwgetid -r')} | {get_wifi_signal_strength()}%")
+        try:
+            self.conn_label.set_text(
+                f"Wifi: {run_cmd('iwgetid -r')} | {get_wifi_signal_strength()}%")
+        except Exception as e:
+            print(e)
+            self.conn_label.set_text("Wifi: Not Connected")
