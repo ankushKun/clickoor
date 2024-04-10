@@ -2,7 +2,7 @@ import pygame
 from pygame import SurfaceType
 import pygame_gui
 from pygame_gui import UIManager
-from pygame_gui.elements import UIButton
+from pygame_gui.elements import UIButton, UILabel
 from globals import state
 import globals
 import os
@@ -40,7 +40,7 @@ class SettingsScreen:
 
         version_rect = pygame.Rect((0, 0), (100, 50))
         version_rect.topleft = (0, 0)
-        self.version_label = UIButton(
+        self.version_label = UILabel(
             version_rect, globals.get_version(), self.manager)
 
     # Runs inside the event loop
