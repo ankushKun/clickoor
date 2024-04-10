@@ -14,26 +14,25 @@ if ping -c 1 google.com &> /dev/null; then
     if $cver -eq "latest-dev" then
         git pull
         echo "updated to latest commit"
-        exit 0
-    fi
-
-    ver=$(curl -s https://api.github.com/repos/$repo/releases/latest | grep tag_name | cut -d : -f 2 | tr -d , | tr -d \"  | cut -d , -f 1 | awk '{$1=$1};1')
-
-    echo "latest version: $ver"
-
-    if [ "$ver" != "$cver" ]; then
-        echo "updating..."
-        zip_url=$(curl -s https://api.github.com/repos/$repo/releases/latest | grep zipball_url | cut -d : -f 2,3 | tr -d , | tr -d \"  | cut -d , -f 1 | awk '{$1=$1};1')
-        echo "downloading $zip_url"
-        curl -L -o update.zip $zip_url
-        unzip update.zip -d update
-        unzip_folder=$(ls update)
-        rsync -av update/$unzip_folder/ ./
-        rm update.zip
-        rm -rf update
-        echo $ver > current
     else
-        echo "already up to date"
+        ver=$(curl -s https://api.github.com/repos/$repo/releases/latest | grep tag_name | cut -d : -f 2 | tr -d , | tr -d \"  | cut -d , -f 1 | awk '{$1=$1};1')
+
+        echo "latest version: $ver"
+
+        if [ "$ver" != "$cver" ]; then
+            echo "updating..."
+            zip_url=$(curl -s https://api.github.com/repos/$repo/releases/latest | grep zipball_url | cut -d : -f 2,3 | tr -d , | tr -d \"  | cut -d , -f 1 | awk '{$1=$1};1')
+            echo "downloading $zip_url"
+            curl -L -o update.zip $zip_url
+            unzip update.zip -d update
+            unzip_folder=$(ls update)
+            rsync -av update/$unzip_folder/ ./
+            rm update.zip
+            rm -rf update
+            echo $ver > current
+        else
+            echo "already up to date"
+        fi
     fi
 else
     # offline
