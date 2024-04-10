@@ -74,7 +74,6 @@ class GalleryScreen:
         status_rect = pygame.Rect((0, 0), (state["res"][0], 100))
         status_rect.bottomleft = (0, state["res"][1])
         self.status_label = UILabel(status_rect, self.status, self.manager)
-        # set background color
         self.status_label.set_text_scale(1.1)
 
     # Runs inside the event loop

@@ -152,11 +152,11 @@ class HomeScreen:
             wifi_rect, "Wifi: " + run_cmd("iwgetid -r"), self.manager)
         self.wifi_label.text_horiz_alignment_padding = 6
 
-        status_rect = pygame.Rect((0, 0), (state["res"][0], 50))
-        status_rect.bottomleft = (state["res"][0], state["res"][1])
+        status_rect = pygame.Rect((0, 0), (state["res"][0], 100))
+        status_rect.bottomleft = (0, state["res"][1])
         self.status_label = UILabel(
             status_rect, self.status, self.manager)
-        self.status_label.text_horiz_alignment_padding = 6
+        self.status_label.set_text_scale(1.1)
 
     def run(self, event: pygame.event.EventType):
         if event.type == pygame_gui.UI_BUTTON_PRESSED:
@@ -171,6 +171,8 @@ class HomeScreen:
 
     def run_non_event(self):
         self.image_surface.fill((30, 30, 30))
+        if not os.path.exists("wallet.json"):
+            self.status = "No wallet"
         try:
             conn_name = run_cmd("iwgetid -r")
             sig = get_wifi_signal_strength()
