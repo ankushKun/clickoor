@@ -120,7 +120,7 @@ class WalletScreen:
                 self.addres_text.set_text(self.wallet.address)
                 self.balance_text.set_text(
                     f"Balance: {self.wallet.balance} AR")
-                Thread(target=load_wallet).start()
+            Thread(target=load_wallet).start()
 
         # self.flask_process = multiprocessing.Process(target=run_server)
         # self.flask_process.start()
