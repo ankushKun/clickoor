@@ -16,7 +16,7 @@ class InfCam:
         self.running = True
         self.screen_change = False
         self.screen = pygame.display.set_mode(state["res"], pygame.FULLSCREEN)
-        # pygame.mouse.set_visible(False)
+        pygame.mouse.set_visible(False)
         self.clock = pygame.time.Clock()
         self.manager = UIManager(
             state["res"], theme_path="pygame-themes/theme.json")
