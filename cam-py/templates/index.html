@@ -13,11 +13,12 @@
 </head>
 
 <body>
-    <h1>Clickoor Camera</h1>
+    <h1>Clickoor Camera 📸</h1>
     <p>Address: {{ data.address }}</p>
-    <p>Balance: {{ data.balance }}</p>
+    <p>Balance: {{ data.balance }} AR</p>
     <hr />
-    <a href="https://clickoor.arweave.dev" target="_blank">View permagallery</a>
+    <a href="https://clickoor.arweave.dev" target="_blank"><button>View permagallery</button></a>
+    <a href="/download"><button>Download JWK</button></a>
     <hr />
     <h2>Upload a new Arweave JWK file</h2>
     <form action="/upload" method="post" enctype="multipart/form-data">
@@ -25,7 +26,6 @@
         <input type="submit" value="Upload">
     </form>
     <hr />
-    <a href="/download"><button>Download JWK</button></a>
 </body>
 
 </html>
