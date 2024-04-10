@@ -11,7 +11,7 @@ if ping -c 1 google.com &> /dev/null; then
     cver=$(cat current)
     echo "current version: $cver"
 
-    if $cver -eq "latest-dev" then
+    if $cver -eq "latest-dev"; then
         git pull
         echo "updated to latest commit"
     else
