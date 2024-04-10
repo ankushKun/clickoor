@@ -46,7 +46,7 @@ def home():
     # else:
     #     w = None
     # print(w)
-    w = arweave.Wallet('wallet.json') if os.path.exists(
+    w = arweave.Wallet('../wallet.json') if os.path.exists(
         '../wallet.json') else None
     return render_template('index.html', data={"address": w.address if w else 'NO WALLET', "balance": w.balance if w else 'NO WALLET'})
 
