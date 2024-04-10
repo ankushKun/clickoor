@@ -5,6 +5,7 @@ from pygame_gui.elements import UIButton, UIImage, UILabel, UIProgressBar
 from pygame_gui import UIManager
 import globals
 from globals import state
+from lib.utils import has_internet_connection
 import os
 import requests
 from io import BytesIO
@@ -44,8 +45,11 @@ class GalleryScreen:
 
         print(self.local_images)
         if len(self.local_images) > 0:
-            self.img = pygame.image.load(
-                f"captures/{self.local_images[self.im_num]}")
+            p = os.path.join(".", "captures",
+                             f"{self.local_images[self.im_num]}")
+            print(p)
+            self.img = pygame.image.load(p)
+            # os.pa(f"captures/{self.local_images[self.im_num]}"))
             sf = min(state["res"][0] / self.img.get_width(),
                      state["res"][1] / self.img.get_height())
             self.img = pygame.transform.scale(
@@ -122,9 +126,13 @@ class GalleryScreen:
                             self.img, (int(self.img.get_width()*sf), int(self.img.get_height()*sf)))
                         self.image_p.set_image(self.img)
             if event.ui_element == self.upload_btn:
-                self.upload_filename = "captures/" + \
-                    self.local_images[self.im_num]
-                self.upload_to_arweave(self.upload_filename)
+                if has_internet_connection():
+                    self.upload_filename = "captures/" + \
+                        self.local_images[self.im_num]
+                    self.status = "Uploading..."
+                    self.upload_to_arweave(self.upload_filename)
+                else:
+                    self.status = "Skipping upload, No internet connection"
 
     def upload_to_arweave(self, fpath: str):
         if not self.wallet:

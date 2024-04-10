@@ -23,7 +23,7 @@ class InfCam:
             pass
         self.clock = pygame.time.Clock()
         self.manager = UIManager(
-            state["res"], theme_path="pygame-themes/theme.json")
+            state["res"], theme_path="pygame-themes/normal.json")
         self.screens = {
             "Home": HomeScreen(self.manager, self.screen, self.set_screen),
             "Settings": SettingsScreen(self.manager, self.screen, self.set_screen),
