@@ -166,7 +166,7 @@ class GalleryScreen:
             iw, ih = i.get_size()
             sf = min(state["res"][0] / iw, state["res"][1] / ih)
             i = pygame.transform.scale(i, (iw*sf, ih*sf))
-            self.image_surface.blit(i, (0, 0))
+            # self.image_surface.blit(i, (0, 0))
             self.uploader.upload_chunk()
             self.progress_bar.show()
             self.progress_bar.set_current_progress(self.uploader.pct_complete)
