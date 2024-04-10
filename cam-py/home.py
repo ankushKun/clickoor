@@ -153,7 +153,7 @@ class HomeScreen:
         self.wifi_label.text_horiz_alignment_padding = 6
 
         status_rect = pygame.Rect((0, 0), (state["res"][0], 50))
-        status_rect.topright = (state["res"][0], state["res"][1])
+        status_rect.bottomleft = (state["res"][0], state["res"][1])
         self.status_label = UILabel(
             status_rect, self.status, self.manager)
         self.status_label.text_horiz_alignment_padding = 6
