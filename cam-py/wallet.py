@@ -95,17 +95,8 @@ class WalletScreen:
         global wallet
         os.system("fuser -k 8080/tcp")
         self.manager.get_theme().load_theme("pygame-themes/normal.json")
-        if os.path.exists('wallet.json'):
-            def load_wallet():
-                self.wallet = arweave.Wallet('wallet.json')
-                wallet = self.wallet
-                self.addres_text.set_text(self.wallet.address)
-                self.balance_text.set_text(
-                    f"Balance: {self.wallet.balance} AR")
-                Thread(target=load_wallet).start()
-        else:
-            self.wallet = None
-            wallet = None
+        self.wallet = None
+        wallet = None
 
         self.back_btn = UIButton(pygame.Rect(
             (0, 0), (100, 50)), text="Back", manager=self.manager)
@@ -119,6 +110,17 @@ class WalletScreen:
             (0, 170), (state["res"][0], 50)), text="or", manager=self.manager)
         self.portal_url_dyn = UILabel(pygame.Rect(
             (0, 190), (state["res"][0], 50)), text=f"http://{hn}:8080", manager=self.manager)
+
+        if os.path.exists('wallet.json'):
+            self.addres_text.set_text("Loading wallet...")
+
+            def load_wallet():
+                self.wallet = arweave.Wallet('wallet.json')
+                wallet = self.wallet
+                self.addres_text.set_text(self.wallet.address)
+                self.balance_text.set_text(
+                    f"Balance: {self.wallet.balance} AR")
+                Thread(target=load_wallet).start()
 
         # self.flask_process = multiprocessing.Process(target=run_server)
         # self.flask_process.start()
