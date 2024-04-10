@@ -13,10 +13,12 @@ import os
 from globals import state, set_config, get_config
 from threading import Thread
 
+wallet = []
+
 if os.path.exists('wallet.json'):
-    wallet = arweave.Wallet('wallet.json')
+    wallet = [arweave.Wallet('wallet.json')]
 else:
-    wallet = None
+    wallet = [None]
 
 
 app = Flask(__name__)
@@ -34,12 +36,14 @@ def valid_filename(filename):
 
 @app.route('/')
 def home():
-    return render_template('index.html', data={"address": wallet.address if wallet else 'NO WALLET', "balance": wallet.balance if wallet else 'NO WALLET'})
+    w = wallet[0]
+    return render_template('index.html', data={"address": w.address if w else 'NO WALLET', "balance": w.balance if w else 'NO WALLET'})
 
 
-@app.route('/gallery')
-def gallery():
-    my_addr = wallet.address if wallet else 'NO WALLET'
+# @app.route('/gallery')
+# def gallery():
+#     w = wallet[0]
+#     my_addr = wallet.address if wallet else 'NO WALLET'
 #     client = GraphqlClient(endpoint="https://arweave.net/graphql")
 
 #     query = """
@@ -56,7 +60,7 @@ def gallery():
 #     data = client.execute(query=query)
 #     print(data)
 
-    return render_template('gallery.html', data="")
+#     return render_template('gallery.html', data="")
 
 
 @app.route('/upload', methods=['POST'])
@@ -111,6 +115,9 @@ class WalletScreen:
         self.portal_url_dyn = UILabel(pygame.Rect(
             (0, 190), (state["res"][0], 50)), text=f"http://{hn}:8080", manager=self.manager)
 
+        self.gallery_url = UILabel(pygame.Rect(
+            (0, 230), (state["res"][0], 50)), text="Gallery: https://clickoor.arweave.dev", manager=self.manager)
+
         if os.path.exists('wallet.json'):
             self.addres_text.set_text("Loading wallet...")
 
@@ -129,10 +136,10 @@ class WalletScreen:
             "cd cam-py && gunicorn -w 1 wallet:app -b 0.0.0.0:8080", shell=True)
 
         self.selector_label = UILabel(pygame.Rect(
-            (0, 240), (state["res"][0]//2, 50)), text="Upload Mode", manager=self.manager)
+            (0, 270), (state["res"][0]//2, 50)), text="Upload Mode", manager=self.manager)
 
         upload_selector_rect = pygame.Rect(
-            (0, 290), (state["res"][0]//2, 50))
+            (0, 310), (state["res"][0]//2, 50))
         upload_selector_rect.centerx = state["res"][0]//2
         self.upload_dropdown = UISelectionList(relative_rect=upload_selector_rect, manager=self.manager, default_selection=get_config(
             "upload_mode") or "Manual Upload", item_list=["Auto Upload", "Manual Upload"], allow_double_clicks=False)
