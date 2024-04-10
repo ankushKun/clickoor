@@ -114,8 +114,10 @@ class HomeScreen:
         self.manager.get_theme().load_theme("pygame-themes/transparent_btn.json")
         pygame.display.set_caption(state["app_name"])
         if os.path.exists("wallet.json"):
+            self.status = "Wallet found"
             self.wallet = Wallet('wallet.json')
         else:
+            self.status = "No wallet"
             self.wallet = None
         self.preview_image = UIImage(pygame.Rect(
             (0, 0), (state["res"][0], state["res"][1])), self.image_surface, self.manager)
@@ -158,9 +160,6 @@ class HomeScreen:
             status_rect, self.status, self.manager)
         self.status_label.set_text_scale(1.1)
 
-        if not os.path.exists("wallet.json"):
-            self.status = "No wallet"
-
     def run(self, event: pygame.event.EventType):
         if event.type == pygame_gui.UI_BUTTON_PRESSED:
             btn: UIButton = event.ui_element
@@ -198,6 +197,7 @@ class HomeScreen:
                 self.file_handler.close()
                 print(f"Uploaded https://arweave.net/{self.tx.id}")
                 os.remove(self.last_filename)
+                self.status = "Uploaded"
         elif self.cam and self.show_preview:
             # this is state["image_res"] (1920,1080)
             arr = self.cam.capture_array()

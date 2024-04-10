@@ -3,6 +3,7 @@ from pygame import SurfaceType
 import pygame_gui
 from pygame_gui.elements import UIButton, UIImage, UILabel, UIProgressBar
 from pygame_gui import UIManager
+import globals
 from globals import state
 import os
 import requests
