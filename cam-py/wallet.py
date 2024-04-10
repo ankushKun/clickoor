@@ -151,4 +151,4 @@ class WalletScreen:
             print(selection_list.get_single_selection())
 
     def run_non_event(self):
-        pass
+        self.screen.fill((0, 0, 0))
