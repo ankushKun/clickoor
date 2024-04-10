@@ -11,6 +11,12 @@ if ping -c 1 google.com &> /dev/null; then
     cver=$(cat current)
     echo "current version: $cver"
 
+    if $cver -eq "latest-dev" then
+        git pull
+        echo "updated to latest commit"
+        exit 0
+    fi
+
     ver=$(curl -s https://api.github.com/repos/$repo/releases/latest | grep tag_name | cut -d : -f 2 | tr -d , | tr -d \"  | cut -d , -f 1 | awk '{$1=$1};1')
 
     echo "latest version: $ver"
