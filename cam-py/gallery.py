@@ -120,8 +120,8 @@ class GalleryScreen:
             if event.ui_element == self.upload_btn:
                 print("Uploading")
                 self.status = "Uploading..."
-                self.upload_filename = f"captures/{
-                    self.local_images[self.im_num]}"
+                self.upload_filename = "captures/" + \
+                    self.local_images[self.im_num]
                 self.upload_to_arweave(
                     f"captures/{self.local_images[self.im_num]}")
 
