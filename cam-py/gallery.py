@@ -178,6 +178,7 @@ class GalleryScreen:
                 self.file_handler.close()
                 print(f"Uploaded https://arweave.net/{self.tx.id}")
                 os.remove(self.upload_filename)
+                self.status = f"Uploaded"
                 self.upload_filename = None
                 img_list = os.listdir('captures')
                 self.local_images = list(
