@@ -71,7 +71,7 @@ class GalleryScreen:
         self.progress_bar = UIProgressBar(progress_rect, manager=self.manager)
         self.progress_bar.hide()
 
-        status_rect = pygame.Rect((0, 0), (state["res"][0], 50))
+        status_rect = pygame.Rect((0, 0), (state["res"][0], 100))
         status_rect.bottomleft = (0, state["res"][1])
         self.status_label = UILabel(status_rect, self.status, self.manager)
         # set background color

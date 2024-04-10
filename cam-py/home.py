@@ -103,8 +103,10 @@ class HomeScreen:
                     self.upload_to_arweave(self.last_filename)
                 else:
                     print("No internet connection, skipping upload")
+                    self.status = "No internet connection, skipping upload"
             else:
                 print("Manual mode")
+                self.status = "Skipping upload, Manual mode"
         else:
             print("Not a raspberry pi device, skipping capture")
 
@@ -169,7 +171,6 @@ class HomeScreen:
 
     def run_non_event(self):
         self.image_surface.fill((30, 30, 30))
-        self.status_label.set_text(self.status)
         try:
             conn_name = run_cmd("iwgetid -r")
             sig = get_wifi_signal_strength()
@@ -202,3 +203,4 @@ class HomeScreen:
             # img = pygame.image.frombuffer(arr.data, state["res"], 'RGB')
             self.image_surface.blit(img, (0, 0))
         self.preview_image.set_image(self.image_surface)
+        self.status_label.set_text(self.status)
