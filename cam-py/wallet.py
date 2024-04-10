@@ -14,9 +14,7 @@ from globals import state, set_config, get_config
 from threading import Thread
 
 if os.path.exists('wallet.json'):
-    def load_wallet():
-        wallet = arweave.Wallet('wallet.json')
-        Thread(target=load_wallet).start()
+    wallet = arweave.Wallet('wallet.json')
 else:
     wallet = None
 
@@ -98,8 +96,10 @@ class WalletScreen:
         os.system("fuser -k 8080/tcp")
         self.manager.get_theme().load_theme("pygame-themes/normal.json")
         if os.path.exists('wallet.json'):
-            self.wallet = arweave.Wallet('wallet.json')
-            wallet = self.wallet
+            def load_wallet():
+                self.wallet = arweave.Wallet('wallet.json')
+                wallet = self.wallet
+                Thread(target=load_wallet).start()
         else:
             self.wallet = None
             wallet = None
