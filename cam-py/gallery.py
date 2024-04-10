@@ -31,6 +31,7 @@ class GalleryScreen:
         if os.path.exists('wallet.json'):
             def load_wallet():
                 self.wallet = Wallet('wallet.json')
+                self.status = "Wallet loaded"
             Thread(target=load_wallet).start()
 
         self.manager.get_theme().load_theme("pygame-themes/normal.json")
@@ -121,18 +122,18 @@ class GalleryScreen:
                             self.img, (int(self.img.get_width()*sf), int(self.img.get_height()*sf)))
                         self.image_p.set_image(self.img)
             if event.ui_element == self.upload_btn:
-                print("Uploading")
-                self.status = "Uploading..."
                 self.upload_filename = "captures/" + \
                     self.local_images[self.im_num]
-                self.upload_to_arweave(
-                    f"captures/{self.local_images[self.im_num]}")
+                self.upload_to_arweave(self.upload_filename)
 
     def upload_to_arweave(self, fpath: str):
         if not self.wallet:
             print("Wallet not found, skipping upload")
             self.status = "Wallet not found, skipping upload"
             return
+
+        print("Uploading")
+        self.status = "Uploading..."
 
         self.file_handler = open(fpath, "rb", buffering=0)
         tx = Transaction(

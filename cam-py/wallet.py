@@ -99,6 +99,9 @@ class WalletScreen:
             def load_wallet():
                 self.wallet = arweave.Wallet('wallet.json')
                 wallet = self.wallet
+                self.addres_text.set_text(self.wallet.address)
+                self.balance_text.set_text(
+                    f"Balance: {self.wallet.balance} AR")
                 Thread(target=load_wallet).start()
         else:
             self.wallet = None

@@ -119,6 +119,7 @@ class HomeScreen:
 
             def load_wallet():
                 self.wallet = Wallet('wallet.json')
+                self.status = "Wallet loaded"
             Thread(target=load_wallet).start()
         else:
             self.status = "No wallet"
