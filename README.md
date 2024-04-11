@@ -1,6 +1,7 @@
 # Clickoor Camera
 
 
+
 <details>
 <summary> <h3 style="display:inline;">Components</h2> </summary>
 
@@ -146,8 +147,6 @@ exec_always --no-startup-id "bash /home/pi/clickoor/scripts/start.sh"
 or copy the config file in `configuration/config` to `~/.config/i3/config`
 
 </details>
-
-## Images
 
 ## TODO:
 
