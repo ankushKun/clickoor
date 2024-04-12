@@ -151,6 +151,8 @@ or copy the config file in `configuration/config` to `~/.config/i3/config`
 ## TODO:
 
 - [ ] Automated setup.sh script for configuring everything
+- [ ] Changable resolution
+- [ ] Video recording option
 - [ ] Options for creation of jwk for first time users
 - [ ] Turbo sdk integration (through ardrive-cli?)
 - [ ] Image compression under 500kb
