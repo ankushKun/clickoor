@@ -194,5 +194,6 @@ bar {
 bindsym $mod+x exec "i3-msg exit"
 bindsym $mod+c exec "bash /home/pi/clickoor/scripts/start.sh"
 bindsym $mod+i exec "x-terminal-emulator -e nmtui"
+exec --no-startup-id conky
 exec_always --no-startup-id "bash /home/pi/clickoor/scripts/start.sh"
 

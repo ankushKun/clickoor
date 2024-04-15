@@ -48,6 +48,9 @@ source venv/bin/activate
 echo "Installing dependencies"
 pip3 install -r cam-py/requirements.txt --no-cache
 
+# replace pi with $me in camera.desktop file
+sed -i "s/pi/$me/" configuration/camera.desktop
+
 sudo cp configuration/camera.desktop /etc/xdg/autostart
 sudo cp configuration/camera.desktop /usr/share/applications
 
