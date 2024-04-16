@@ -1,0 +1,5 @@
+#!/usr/bin/bash
+
+me=$(whoami)
+
+startx /usr/bin/bash /home/$me/clickoor/scripts/start.sh

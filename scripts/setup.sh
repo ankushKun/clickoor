@@ -54,5 +54,9 @@ sed -i "s/pi/$me/" configuration/camera.desktop
 sudo cp configuration/camera.desktop /etc/xdg/autostart
 sudo cp configuration/camera.desktop /usr/share/applications
 
+# add bin/ to path
+chmod +x bin/startcam
+echo "export PATH=$PATH:/home/$me/clickoor/bin" >> ~/.bashrc
+
 echo "Setup Complete"
-echo "Run Menu > Other > Clickoor Camera"
+echo "Run Menu > Other > Clickoor Camera, or Run startcam from cli mode"
