@@ -56,11 +56,10 @@ class HomeScreen:
             self.capture_config = cam.create_still_configuration(
                 {"size": state["image_res"]}, buffer_count=1)
             self.cam.configure(self.capture_config)
-            self.selected_exposure: str = list(self.exposure_times.keys())[
-                self.selected_exposure_idx]
-            self.cam.set_controls(
-                # {"ExposureTime": self.exposure_times[self.selected_exposure]})
-                {"ExposureTime": 10000})
+            # self.selected_exposure: str = list(self.exposure_times.keys())[
+            #     self.selected_exposure_idx]
+            self.cam.set_controls({"ExposureTime": 10000})
+            # {"ExposureTime": self.exposure_times[self.selected_exposure]})
             self.cam.start()
             self.show_preview = True
         except NameError:
