@@ -42,7 +42,7 @@ class HomeScreen:
         # self.selected_exposure: str = list(self.exposure_times.keys())[
         # self.selected_exposure_idx]
         try:
-            self.shutter = Button(5)
+            self.shutter = Button(5, hold_time=1)
             self.shutter.when_pressed = self.capture_and_save
             cam = Picamera2()
             cam.preview_configuration.main.size = state["res"]

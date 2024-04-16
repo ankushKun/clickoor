@@ -16,7 +16,7 @@ class InfCam:
         self.running = True
         self.screen_change = False
         self.screen = pygame.display.set_mode(
-            state["res"], pygame.FULLSCREEN, vsync=60)
+            state["res"], pygame.FULLSCREEN, vsync=1)
         try:
             import gpiozero
             pygame.mouse.set_visible(False)
