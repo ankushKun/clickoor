@@ -56,7 +56,7 @@ sudo cp configuration/camera.desktop /usr/share/applications
 
 # add bin/ to path
 chmod +x bin/startcam
-echo "export PATH=$PATH:/home/$me/clickoor/bin" >> ~/.bashrc
+sudo cp bin/startcam /usr/local/bin
 
 echo "Setup Complete"
 echo "Run Menu > Other > Clickoor Camera, or Run startcam from cli mode"
