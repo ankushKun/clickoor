@@ -99,32 +99,41 @@ class GalleryScreen:
                 if len(self.local_images) > 0 and self.im_num > 0:
                     self.im_num -= 1
             if len(self.local_images) > 0:
-                self.img = pygame.image.load(
-                    f"captures/{self.local_images[self.im_num]}")
-                sf = min(state["res"][0] / self.img.get_width(),
-                         state["res"][1] / self.img.get_height())
-                self.img = pygame.transform.scale(
-                    self.img, (int(self.img.get_width()*sf), int(self.img.get_height()*sf)))
+                try:
+                    self.img = pygame.image.load(
+                        f"captures/{self.local_images[self.im_num]}")
+                    sf = min(state["res"][0] / self.img.get_width(),
+                             state["res"][1] / self.img.get_height())
+                    self.img = pygame.transform.scale(
+                        self.img, (int(self.img.get_width()*sf), int(self.img.get_height()*sf)))
+                except:
+                    self.status = "Error loading image"
+                    self.img = pygame.image.frombytes(
+                        b'\x00\x00\x00\x00', (1, 1), 'RGBA'
+                    )
                 self.image_p.set_image(self.img)
             if event.ui_element == self.delete_btn:
-                if len(self.local_images) > 0:
-                    os.remove(f"captures/{self.local_images[self.im_num]}")
-                    self.local_images.pop(self.im_num)
-                    if len(self.local_images) == 0:
-                        self.img = pygame.image.frombytes(
-                            b'\x00\x00\x00\x00', (1, 1), 'RGBA'
-                        )
-                        self.image_p.set_image(self.img)
-                    else:
-                        self.im_num = min(
-                            self.im_num, len(self.local_images)-1)
-                        self.img = pygame.image.load(
-                            f"captures/{self.local_images[self.im_num]}")
-                        sf = min(state["res"][0] / self.img.get_width(),
-                                 state["res"][1] / self.img.get_height())
-                        self.img = pygame.transform.scale(
-                            self.img, (int(self.img.get_width()*sf), int(self.img.get_height()*sf)))
-                        self.image_p.set_image(self.img)
+                try:
+                    if len(self.local_images) > 0:
+                        os.remove(f"captures/{self.local_images[self.im_num]}")
+                        self.local_images.pop(self.im_num)
+                        if len(self.local_images) == 0:
+                            self.img = pygame.image.frombytes(
+                                b'\x00\x00\x00\x00', (1, 1), 'RGBA'
+                            )
+                            self.image_p.set_image(self.img)
+                        else:
+                            self.im_num = min(
+                                self.im_num, len(self.local_images)-1)
+                            self.img = pygame.image.load(
+                                f"captures/{self.local_images[self.im_num]}")
+                            sf = min(state["res"][0] / self.img.get_width(),
+                                     state["res"][1] / self.img.get_height())
+                            self.img = pygame.transform.scale(
+                                self.img, (int(self.img.get_width()*sf), int(self.img.get_height()*sf)))
+                            self.image_p.set_image(self.img)
+                except:
+                    self.status = "Error deleting image"
             if event.ui_element == self.upload_btn:
                 if has_internet_connection() and len(self.local_images) > 0:
                     self.upload_filename = "captures/" + \

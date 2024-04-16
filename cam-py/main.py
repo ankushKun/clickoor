@@ -15,7 +15,8 @@ class InfCam:
         pygame.init()
         self.running = True
         self.screen_change = False
-        self.screen = pygame.display.set_mode(state["res"], pygame.FULLSCREEN)
+        self.screen = pygame.display.set_mode(
+            state["res"], pygame.FULLSCREEN, vsync=30)
         try:
             import gpiozero
             pygame.mouse.set_visible(False)
@@ -48,7 +49,7 @@ class InfCam:
             self.screens[self.active_screen].setup()
             self.screen_change = False
             while not self.screen_change:
-                time_delta = self.clock.tick(24)/1000.0
+                time_delta = self.clock.tick(30)/1000.0
                 self.screens[self.active_screen].run_non_event()
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_q):

@@ -32,6 +32,19 @@ class HomeScreen:
         self.cam = None
         self.uploader = None
         self.status = ""
+        self.exposure_times = {
+            "1": 1000000,
+            "1/10": 100000,
+            "1/100": 10000,
+            "1/200": 5000,
+            "1/250": 4000,
+            "1/320": 3125,
+            "1/400": 2500,
+            "1/500": 2000,
+        }
+        self.selected_exposure_idx = 1
+        self.selected_exposure: str = list(self.exposure_times.keys())[
+            self.selected_exposure_idx]
         try:
             self.shutter = Button(5)
             self.shutter.when_pressed = self.capture_and_save
@@ -45,8 +58,12 @@ class HomeScreen:
                 print("No autofocus")
             self.cam = cam
             self.capture_config = cam.create_still_configuration(
-                {"size": state["image_res"]}, buffer_count=3)
+                {"size": state["image_res"]}, buffer_count=1)
             self.cam.configure(self.capture_config)
+            self.selected_exposure: str = list(self.exposure_times.keys())[
+                self.selected_exposure_idx]
+            self.cam.set_controls(
+                {"ExposureTime": self.exposure_times[self.selected_exposure]})
             self.cam.start()
             self.show_preview = True
         except NameError:
@@ -165,6 +182,21 @@ class HomeScreen:
             status_rect, self.status, self.manager)
         self.status_label.set_text_scale(1.1)
 
+        shutter_speed_plus_rect = pygame.Rect((0, 0), (50, 50))
+        shutter_speed_plus_rect.topleft = (0, 50)
+        self.shutter_speed_plus_btn = UIButton(
+            shutter_speed_plus_rect, "+", self.manager)
+
+        shutter_speed_minus_rect = pygame.Rect((0, 0), (50, 50))
+        shutter_speed_minus_rect.topleft = (50, 50)
+        self.shutter_speed_minus_btn = UIButton(
+            shutter_speed_minus_rect, "-", self.manager)
+
+        self.shutter_speed_label = UILabel(
+            pygame.Rect((0, 0), (200, 50)), f"Shutter Speed: {self.exposure_times[self.selected_exposure]}", self.manager)
+        self.shutter_speed_label.set_text_scale(1.1)
+        self.shutter_speed_label.rect.topleft = (0, 100)
+
     def run(self, event: pygame.event.EventType):
         if event.type == pygame_gui.UI_BUTTON_PRESSED:
             btn: UIButton = event.ui_element
@@ -175,6 +207,24 @@ class HomeScreen:
                 self.capture_and_save()
             elif btn == self.gallery_btn:
                 self.set_screen("Gallery")
+            elif btn == self.shutter_speed_plus_btn:
+                if self.selected_exposure_idx < len(self.exposure_times)-1:
+                    self.selected_exposure_idx += 1
+                    self.selected_exposure = list(
+                        self.exposure_times.keys())[self.selected_exposure_idx]
+                    self.cam.set_controls(
+                        {"ExposureTime": self.exposure_times[self.selected_exposure]})
+                    self.shutter_speed_label.set_text(
+                        f"Shutter Speed: {self.selected_exposure}")
+            elif btn == self.shutter_speed_minus_btn:
+                if self.selected_exposure_idx > 0:
+                    self.selected_exposure_idx -= 1
+                    self.selected_exposure = list(
+                        self.exposure_times.keys())[self.selected_exposure_idx]
+                    self.cam.set_controls(
+                        {"ExposureTime": self.exposure_times[self.selected_exposure]})
+                    self.shutter_speed_label.set_text(
+                        f"Shutter Speed: {self.selected_exposure}")
 
     def run_non_event(self):
         self.image_surface.fill((30, 30, 30))
