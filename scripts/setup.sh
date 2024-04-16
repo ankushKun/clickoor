@@ -54,6 +54,8 @@ sed -i "s/pi/$me/" configuration/camera.desktop
 sudo cp configuration/camera.desktop /etc/xdg/autostart
 sudo cp configuration/camera.desktop /usr/share/applications
 
+sudo cp configuration/40-libinput.conf /etc/X11/xorg.conf.d/40-libinput.conf
+
 # add bin/ to path
 chmod +x bin/startcam
 sudo cp bin/startcam /usr/local/bin
