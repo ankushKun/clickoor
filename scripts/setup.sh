@@ -58,5 +58,11 @@ sudo cp configuration/camera.desktop /usr/share/applications
 chmod +x bin/startcam
 sudo cp bin/startcam /usr/local/bin
 
+# add startcamera autoexec to bashrc if its not already there
+if ! grep -q "startcam" ~/.bashrc; then
+    echo "Adding startcam to ~/.bashrc"
+    echo "startcam" >> ~/.bashrc
+fi
+
 echo "Setup Complete"
 echo "Run Menu > Other > Clickoor Camera, or Run startcam from cli mode"
