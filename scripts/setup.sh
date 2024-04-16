@@ -68,3 +68,5 @@ fi
 
 echo "Setup Complete"
 echo "Run Menu > Other > Clickoor Camera, or Run startcam from cli mode"
+
+sudo reboot now
