@@ -46,7 +46,7 @@ class HomeScreen:
         self.last_capture = datetime.now().timestamp()
         try:
             self.shutter = Button(5, hold_time=1)
-            self.shutter.when_pressed = self.capture_and_save
+            self.shutter.when_released = self.capture_and_save
             cam = Picamera2()
             cam.preview_configuration.main.size = state["res"]
             cam.preview_configuration.main.format = 'BGR888'
