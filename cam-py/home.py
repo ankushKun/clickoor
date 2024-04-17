@@ -33,7 +33,7 @@ class HomeScreen:
         self.uploader = None
         self.status = ""
         self.exposure_times = {
-            "1/10": 100000,
+            # "1/10": 100000,
             "1/30": 33333,
             "1/60": 16666,
             "1/100": 10000,
@@ -43,9 +43,11 @@ class HomeScreen:
         self.selected_exposure_idx = 0
         self.selected_exposure: str = list(self.exposure_times.keys())[
             self.selected_exposure_idx]
+        self.last_capture = datetime.now().timestamp()
         try:
             self.shutter = Button(5, hold_time=1)
             self.shutter.when_pressed = self.capture_and_save
+            self.shutter.when_released = self.shutter_released
             cam = Picamera2()
             cam.preview_configuration.main.size = state["res"]
             cam.preview_configuration.main.format = 'BGR888'
@@ -60,7 +62,8 @@ class HomeScreen:
             self.cam.configure(self.capture_config)
             self.selected_exposure: str = list(self.exposure_times.keys())[
                 self.selected_exposure_idx]
-            self.cam.set_controls({"ExposureTime": 10000})
+            self.cam.set_controls(
+                {"ExposureTime": self.exposure_times[self.selected_exposure]})
             # {"ExposureTime": self.exposure_times[self.selected_exposure]})
             self.cam.start()
             self.show_preview = True
@@ -100,6 +103,11 @@ class HomeScreen:
         # return tx.id
 
     def capture_and_save(self):
+        now = datetime.now().timestamp()
+        if int(now - self.last_capture) < 1:
+            print("Too fast")
+            return
+
         print("capturing image")
         # ts = datetime.now().strftime('%Y%m%d_%H%M%S')
         ts = datetime.now()
@@ -180,19 +188,20 @@ class HomeScreen:
             status_rect, self.status, self.manager)
         self.status_label.set_text_scale(1.1)
 
-        shutter_speed_plus_rect = pygame.Rect((0, 0), (50, 50))
-        shutter_speed_plus_rect.topleft = (0, 50)
-        self.shutter_speed_plus_btn = UIButton(
-            shutter_speed_plus_rect, "+", self.manager)
-
         shutter_speed_minus_rect = pygame.Rect((0, 0), (50, 50))
-        shutter_speed_minus_rect.topleft = (50, 50)
+        shutter_speed_minus_rect.topleft = (0, 50)
         self.shutter_speed_minus_btn = UIButton(
             shutter_speed_minus_rect, "-", self.manager)
 
+        shutter_speed_plus_rect = pygame.Rect((0, 0), (50, 50))
+        shutter_speed_plus_rect.topleft = (50, 50)
+        self.shutter_speed_plus_btn = UIButton(
+            shutter_speed_plus_rect, "+", self.manager)
+
         self.shutter_speed_label = UILabel(
-            pygame.Rect((0, 0), (200, 50)), f"Shutter Speed: {self.selected_exposure}", self.manager)
+            pygame.Rect((0, 0), (-1, 50)), f"Shutter Speed: {self.selected_exposure}", self.manager)
         self.shutter_speed_label.set_text_scale(1.1)
+        self.shutter_speed_label.text_horiz_alignment_padding = 5
         self.shutter_speed_label.rect.topleft = (0, 100)
 
         # run the image preview code in a seperate thread
