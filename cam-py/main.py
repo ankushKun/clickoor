@@ -8,10 +8,11 @@ from home import HomeScreen
 from settings import SettingsScreen
 from wallet import WalletScreen
 from gallery import GalleryScreen
-
+from lib.utils import run_cmd
 
 class InfCam:
     def __init__(self):
+        run_cmd("xrandr -o inverted")
         pygame.init()
         self.running = True
         self.screen_change = False
