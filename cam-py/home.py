@@ -47,7 +47,6 @@ class HomeScreen:
         try:
             self.shutter = Button(5, hold_time=1)
             self.shutter.when_pressed = self.capture_and_save
-            self.shutter.when_released = self.shutter_released
             cam = Picamera2()
             cam.preview_configuration.main.size = state["res"]
             cam.preview_configuration.main.format = 'BGR888'
@@ -104,7 +103,7 @@ class HomeScreen:
 
     def capture_and_save(self):
         now = datetime.now().timestamp()
-        if int(now - self.last_capture) < 1:
+        if int(now - self.last_capture) < 2:
             print("Too fast")
             return
 
@@ -198,11 +197,12 @@ class HomeScreen:
         self.shutter_speed_plus_btn = UIButton(
             shutter_speed_plus_rect, "+", self.manager)
 
-        self.shutter_speed_label = UILabel(
-            pygame.Rect((0, 0), (-1, 50)), f"Shutter Speed: {self.selected_exposure}", self.manager)
+        shutter_speed_label_rect = pygame.Rect((0, 0), (200, 50))
+        shutter_speed_label_rect.topleft = (0, 20)
+        self.shutter_speed_label = UILabel(shutter_speed_label_rect,
+                                           f"Shutter Speed: {self.selected_exposure}", self.manager)
         self.shutter_speed_label.set_text_scale(1.1)
         self.shutter_speed_label.text_horiz_alignment_padding = 5
-        self.shutter_speed_label.rect.topleft = (0, 100)
 
         # run the image preview code in a seperate thread
 
@@ -239,8 +239,11 @@ class HomeScreen:
         self.image_surface.fill((30, 30, 30))
         try:
             conn_name = run_cmd("iwgetid -r")
-            sig = get_wifi_signal_strength()
-            self.wifi_label.set_text(f"Wifi: {conn_name} | {sig}%")
+            if len(conn_name) > 0:
+                sig = get_wifi_signal_strength()
+                self.wifi_label.set_text(f"Wifi: {conn_name} | {sig}%")
+            else:
+                self.wifi_label.set_text("Wifi: Not Connected")
         except Exception as e:
             print(e)
             self.wifi_label.set_text("Wifi: Not Connected")
