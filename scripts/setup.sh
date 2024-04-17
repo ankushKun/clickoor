@@ -66,6 +66,9 @@ if ! grep -q "startcam" ~/.bashrc; then
     echo "startcam" >> ~/.bashrc
 fi
 
+sudo cp configuration/splash.png /usr/share/plymouth/themes/pix/splash.png
+sudo plymouth-set-default-theme --rebuild-initrd pix
+
 echo "Setup Complete"
 echo "Run Menu > Other > Clickoor Camera, or Run startcam from cli mode"
 
