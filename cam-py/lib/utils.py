@@ -4,7 +4,7 @@ import requests
 
 
 def run_cmd(cmd: str):
-    res = subprocess.run(cmd, shell=True, capture_output=True, timeout=0.2)
+    res = subprocess.run(cmd, shell=True, capture_output=True, timeout=0.15)
     try:
         res.check_returncode()
         return res.stdout.decode("utf-8").strip()
