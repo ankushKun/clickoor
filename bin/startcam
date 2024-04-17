@@ -2,8 +2,4 @@
 
 me=$(whoami)
 
-
-# run startx if it is not already running
-if [ -z "$(pgrep startx)" ]; then
-    startx /usr/bin/bash /home/$me/clickoor/scripts/start.sh
-fi
+startx /usr/bin/bash /home/$me/clickoor/scripts/start.sh
