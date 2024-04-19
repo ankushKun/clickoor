@@ -19,7 +19,8 @@ altkey = {
 
     'Caps': 'Caps',
     'Enter': 'Enter',
-    'Backspace': 'Backspace'
+    'Backspace': 'Backspace',
+    'Space': 'Space'
 }
 
 characters = [
@@ -30,7 +31,7 @@ characters = [
     [['a'], ['s'], ['d'], ['f'], ['g'], ['h'], ['j'],
         ['k'], ['l'], [';'], ['\''], ['Enter']],
     [['Caps'], ['z'], ['x'], ['c'], ['v'], [
-        'b'], ['n'], ['m'], [','], ['.'], ['/']]
+        'b'], ['n'], ['m'], [','], ['.'], ['/'], ['Space']]
 ]
 
 
@@ -103,6 +104,11 @@ class WifiScreen:
                     self.ssid_input.set_text(self.ssid_input.get_text()[:-1])
                 elif self.focused_input == "PASS":
                     self.pass_input.set_text(self.pass_input.get_text()[:-1])
+            elif btn.text == 'Space':
+                if self.focused_input == "SSID":
+                    self.ssid_input.set_text(self.ssid_input.get_text() + ' ')
+                elif self.focused_input == "PASS":
+                    self.pass_input.set_text(self.pass_input.get_text() + ' ')
             elif btn == self.conn_btn:
                 print('Connecting')
                 # disconnect

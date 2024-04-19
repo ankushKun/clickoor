@@ -9,17 +9,18 @@ from settings import SettingsScreen
 from wallet import WalletScreen
 from gallery import GalleryScreen
 from lib.utils import run_cmd
+from os import system
 
 
 class InfCam:
     def __init__(self):
         disp_orientation = get_config("orientation")
         if disp_orientation == "Inverted":
-            run_cmd("wlr-randr --output DSI-1 --transform 180")
-            run_cmd("xrandr -o inverted")
+            system("wlr-randr --output DSI-1 --transform 180")
+            # system("xrandr -o inverted")
         else:
-            run_cmd("wlr-randr --output DSI-1 --transform 0")
-            run_cmd("xrandr -o normal")
+            system("wlr-randr --output DSI-1 --transform normal")
+            # system("xrandr -o normal")
         pygame.init()
         self.running = True
         self.screen_change = False
@@ -32,7 +33,7 @@ class InfCam:
             pass
         self.clock = pygame.time.Clock()
         self.manager = UIManager(
-            state["res"], theme_path="pygame-themes/normal.json")
+            state["res"])
         self.screens = {
             "Home": HomeScreen(self.manager, self.screen, self.set_screen),
             "Settings": SettingsScreen(self.manager, self.screen, self.set_screen),

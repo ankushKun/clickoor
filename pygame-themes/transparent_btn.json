@@ -2,7 +2,9 @@
     "button": {
         "colours": {
             "normal_bg": "#ffffff00",
-            "normal_border": "#00000000"
+            "normal_border": "#00000000",
+            "hover_bg": "#ffffff00",
+            "hover_border": "#00000000"
         }
     }
 }

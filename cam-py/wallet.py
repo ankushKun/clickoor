@@ -2,7 +2,7 @@ import subprocess
 import pygame
 from pygame import SurfaceType
 import pygame_gui
-from pygame_gui.elements import UILabel, UIButton, UISelectionList
+from pygame_gui.elements import UILabel, UIButton, UIDropDownMenu
 from pygame_gui import UIManager
 import arweave
 from flask import Flask, render_template, request, send_file
@@ -146,14 +146,18 @@ class WalletScreen:
         self.flask_process = subprocess.Popen(
             "cd cam-py && gunicorn -w 1 wallet:app -b 0.0.0.0:8080", shell=True)
 
-        self.selector_label = UILabel(pygame.Rect(
-            (0, 270), (state["res"][0]//2, 50)), text="Upload Mode", manager=self.manager)
+        selector_label_rect = pygame.Rect(
+            (0, 270), (state["res"][0], 50))
+        self.selector_label = UILabel(
+            selector_label_rect, text="Upload Mode", manager=self.manager)
 
         upload_selector_rect = pygame.Rect(
             (0, 310), (state["res"][0]//2, 50))
         upload_selector_rect.centerx = state["res"][0]//2
-        self.upload_dropdown = UISelectionList(relative_rect=upload_selector_rect, manager=self.manager, default_selection=get_config(
-            "upload_mode") or "Manual Upload", item_list=["Auto Upload", "Manual Upload"], allow_double_clicks=False)
+        # self.upload_dropdown = UIDropDownMenu(relative_rect=upload_selector_rect, manager=self.manager, default_selection=get_config(
+        #     "upload_mode") or "Manual Upload", item_list=["Auto Upload", "Manual Upload"], allow_double_clicks=False)
+        self.upload_selector = UIDropDownMenu(
+            ["Auto Upload", "Manual Upload"], get_config("upload_mode"), upload_selector_rect, self.manager)
 
     def run(self, event: pygame.event.EventType):
         if event.type == pygame_gui.UI_BUTTON_PRESSED:
@@ -163,10 +167,13 @@ class WalletScreen:
                 self.flask_process.kill()
                 os.system("fuser -k 8080/tcp")
                 self.set_screen("Settings")
-        if event.type == pygame_gui.UI_SELECTION_LIST_NEW_SELECTION:
-            selection_list: UISelectionList = event.ui_element
-            set_config("upload_mode", selection_list.get_single_selection())
-            print(selection_list.get_single_selection())
+        if event.type == pygame_gui.UI_DROP_DOWN_MENU_CHANGED:
+            # selection_list: UISelectionList = event.ui_element
+            # set_config("upload_mode", selection_list.get_single_selection())
+            # print(selection_list.get_single_selection())
+            if event.ui_element == self.upload_selector:
+                set_config("upload_mode", event.text)
+                print(event.text)
 
     def run_non_event(self):
         self.screen.fill((0, 0, 0))

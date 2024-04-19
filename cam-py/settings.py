@@ -2,7 +2,7 @@ import pygame
 from pygame import SurfaceType
 import pygame_gui
 from pygame_gui import UIManager
-from pygame_gui.elements import UIButton, UILabel, UIDropDownMenu
+from pygame_gui.elements import UIButton, UILabel, UIDropDownMenu, UIImage
 from globals import state
 import globals
 import os
@@ -18,10 +18,13 @@ class SettingsScreen:
 
     # Runs once
     def setup(self):
-        self.manager.get_theme().load_theme("pygame-themes/normal.json")
-        back_rect = pygame.Rect((0, 0), (100, 50))
-        back_rect.center = (state["res"][0]//2, state["res"][1]//2 - 50)
+        self.manager.get_theme().load_theme("pygame-themes/transparent_btn.json")
+
+        back_rect = pygame.Rect((0, 0), (60, 60))
+        back_rect.topleft = (5, 5)
         self.back_btn = UIButton(back_rect, "Back", self.manager)
+        self.back_btn.normal_image = pygame.image.load("assets/back.png")
+        UIImage(back_rect, self.back_btn.normal_image, self.manager)
 
         wifi_rect = pygame.Rect((0, 0), (100, 50))
         wifi_rect.center = (state["res"][0]//2, state["res"][1]//2)
@@ -35,18 +38,21 @@ class SettingsScreen:
         # exit_rect.center = (state["res"][0]//2, state["res"][1]//2 + 100)
         # self.exit_btn = UIButton(exit_rect, "Exit", self.manager)
 
-        shutdown_rect = pygame.Rect((0, 0), (100, 50))
-        shutdown_rect.center = (state["res"][0]//2, state["res"][1]//2 + 100)
+        shutdown_rect = pygame.Rect((0, 0), (60, 60))
+        shutdown_rect.topright = (state["res"][0] - 5, 5)
         self.shutdown_btn = UIButton(shutdown_rect, "Shutdown", self.manager)
+        self.shutdown_btn.normal_image = pygame.image.load(
+            "assets/shutdown.png")
+        UIImage(shutdown_rect, self.shutdown_btn.normal_image, self.manager)
 
         version_rect = pygame.Rect((0, 0), (100, 50))
-        version_rect.topleft = (0, 0)
+        version_rect.bottomleft = (0, state["res"][1])
         self.version_label = UILabel(
             version_rect, globals.get_version(), self.manager)
 
         display_orientation_rect = pygame.Rect((0, 0), (100, 50))
         display_orientation_rect.center = (
-            state["res"][0]//2, state["res"][1]//2 + 150)
+            state["res"][0]//2, state["res"][1]//2 + 100)
         self.display_orientation = UIDropDownMenu(
             ["Normal", "Inverted"], get_config("orientation"), display_orientation_rect, self.manager)
 
@@ -72,8 +78,9 @@ class SettingsScreen:
                     if event.text == "Normal":
                         try:
                             set_config("orientation", "Normal")
-                            os.system("wlr-randr --output DSI-1 --transform 0")
-                            os.system("xrandr -o normal")
+                            os.system(
+                                "wlr-randr --output DSI-1 --transform normal")
+                            # os.system("xrandr -o normal")
                         except:
                             pass
                     elif event.text == "Inverted":
@@ -81,7 +88,7 @@ class SettingsScreen:
                             set_config("orientation", "Inverted")
                             os.system(
                                 "wlr-randr --output DSI-1 --transform 180")
-                            os.system("xrandr -o inverted")
+                            # os.system("xrandr -o inverted")
                         except:
                             pass
 
