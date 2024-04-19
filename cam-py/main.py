@@ -24,12 +24,14 @@ class InfCam:
         pygame.init()
         self.running = True
         self.screen_change = False
-        self.screen = pygame.display.set_mode(
-            state["res"], pygame.FULLSCREEN, vsync=1)
         try:
             import gpiozero
+            self.screen = pygame.display.set_mode(
+                state["res"], pygame.FULLSCREEN, vsync=1)
             pygame.mouse.set_visible(False)
         except:
+            self.screen = pygame.display.set_mode(
+                state["res"], vsync=1)
             pass
         self.clock = pygame.time.Clock()
         self.manager = UIManager(

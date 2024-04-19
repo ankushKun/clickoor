@@ -20,19 +20,31 @@ class SettingsScreen:
     def setup(self):
         self.manager.get_theme().load_theme("pygame-themes/transparent_btn.json")
 
+        UILabel(pygame.Rect((0, 10), (state["res"][0], 25)),
+                "Clickoor", self.manager)
+        UILabel(pygame.Rect(
+            (0, 35), (state["res"][0], 25)), globals.get_version(), self.manager)
+
         back_rect = pygame.Rect((0, 0), (50, 50))
         back_rect.topleft = (10, 10)
         self.back_btn = UIButton(back_rect, "Back", self.manager)
         self.back_btn.normal_image = pygame.image.load("assets/back.png")
         UIImage(back_rect, self.back_btn.normal_image, self.manager)
 
-        wifi_rect = pygame.Rect((0, 0), (100, 50))
-        wifi_rect.center = (state["res"][0]//2, state["res"][1]//2)
+        wifi_rect = pygame.Rect((0, 0), (50, 50))
+        wifi_rect.centery = state["res"][1]//2 - 35
+        wifi_rect.left = 10
         self.wifi_settings = UIButton(wifi_rect, "Wifi", self.manager)
+        self.wifi_settings.normal_image = pygame.image.load("assets/wifi.png")
+        UIImage(wifi_rect, self.wifi_settings.normal_image, self.manager)
 
-        wallet_rect = pygame.Rect((0, 0), (100, 50))
-        wallet_rect.center = (state["res"][0]//2, state["res"][1]//2 + 50)
+        wallet_rect = pygame.Rect((0, 0), (60, 60))
+        wallet_rect.centery = state["res"][1]//2 + 35
+        wallet_rect.left = 10
         self.wallet_settings = UIButton(wallet_rect, "Wallet", self.manager)
+        self.wallet_settings.normal_image = pygame.image.load(
+            "assets/wallet.png")
+        UIImage(wallet_rect, self.wallet_settings.normal_image, self.manager)
 
         # exit_rect = pygame.Rect((0, 0), (100, 50))
         # exit_rect.center = (state["res"][0]//2, state["res"][1]//2 + 100)
@@ -45,14 +57,27 @@ class SettingsScreen:
             "assets/shutdown.png")
         UIImage(shutdown_rect, self.shutdown_btn.normal_image, self.manager)
 
-        version_rect = pygame.Rect((0, 0), (100, 50))
-        version_rect.bottomleft = (0, state["res"][1])
-        self.version_label = UILabel(
-            version_rect, globals.get_version(), self.manager)
+        camera_res_label_rect = pygame.Rect((0, 0), (state["res"][0]//2, 25))
+        camera_res_label_rect.center = (
+            state["res"][0]//2, state["res"][1]//2 - 85)
+        UILabel(camera_res_label_rect, "Camera Resolution", self.manager)
+        camera_res_dropdown_rect = pygame.Rect(
+            (0, 0), (state["res"][0]//2, 50))
+        camera_res_dropdown_rect.center = (
+            state["res"][0]//2, state["res"][1]//2 - 50)
+        self.camera_res_dropdown = UIDropDownMenu(
+            ["1920x1080", "1280x720"], get_config("camera_res"), camera_res_dropdown_rect, self.manager)
 
-        display_orientation_rect = pygame.Rect((0, 0), (100, 50))
+        display_orientation_label_rect = pygame.Rect(
+            (0, 0), (state["res"][0]//2, 25))
+        display_orientation_label_rect.center = (
+            state["res"][0]//2, state["res"][1]//2 + 15)
+        UILabel(display_orientation_label_rect,
+                "Display Orientation", self.manager)
+        display_orientation_rect = pygame.Rect(
+            (0, 0), (state["res"][0]//2, 50))
         display_orientation_rect.center = (
-            state["res"][0]//2, state["res"][1]//2 + 100)
+            state["res"][0]//2, state["res"][1]//2 + 50)
         self.display_orientation = UIDropDownMenu(
             ["Normal", "Inverted"], get_config("orientation"), display_orientation_rect, self.manager)
 

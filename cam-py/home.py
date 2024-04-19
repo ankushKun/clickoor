@@ -150,7 +150,7 @@ class HomeScreen:
             (0, 0), (state["res"][0], state["res"][1])), self.image_surface, self.manager)
 
         settings_rect = pygame.Rect((0, 0), (60, 60))
-        settings_rect.bottomleft = (0, state["res"][1])
+        settings_rect.bottomleft = (5, state["res"][1]-5)
         self.open_settings_btn = UIButton(
             settings_rect, "Settings", self.manager)
         self.open_settings_btn.normal_image = pygame.image.load(
@@ -165,7 +165,7 @@ class HomeScreen:
         UIImage(capture_rect, self.capture_btn.normal_image, self.manager)
 
         gallery_rect = pygame.Rect((0, 0), (60, 60))
-        gallery_rect.bottomright = (state["res"][0], state["res"][1])
+        gallery_rect.bottomright = (state["res"][0]-5, state["res"][1]-5)
         self.gallery_btn = UIButton(gallery_rect, "Gallery", self.manager)
         self.gallery_btn.normal_image = pygame.image.load("assets/gallery.png")
         UIImage(gallery_rect, self.gallery_btn.normal_image, self.manager)

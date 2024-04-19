@@ -150,10 +150,12 @@ or copy the config file in `configuration/config` to `~/.config/i3/config`
 
 ## TODO:
 
-- [ ] Automated setup.sh script for configuring everything
+- [ ] Wifi connection in a different thread to stop main thread from blocking
+- [ ] Camera preview in a different thread for better performance?
+- [x] Automated setup.sh script for configuring everything
 - [ ] Changable resolution
 - [ ] Video recording option
-- [ ] Exception handling wherever possible (starting with gallery image loading)
+- [x] Exception handling wherever possible (starting with gallery image loading)
 - [ ] Options for creation of jwk for first time users
 - [ ] Turbo sdk integration (through ardrive-cli?)
 - [ ] Image compression under 500kb
