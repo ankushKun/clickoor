@@ -72,4 +72,6 @@ sudo plymouth-set-default-theme --rebuild-initrd pix
 echo "Setup Complete"
 echo "Run Menu > Other > Clickoor Camera, or Run startcam from cli mode"
 
+sudo raspi-config nonint do_boot_behaviour B2
+
 sudo reboot now
