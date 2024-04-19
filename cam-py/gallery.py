@@ -35,7 +35,7 @@ class GalleryScreen:
                 self.status = "Wallet loaded"
             Thread(target=load_wallet).start()
 
-        self.manager.get_theme().load_theme("pygame-themes/normal.json")
+        # self.manager.get_theme().load_theme("pygame-themes/transparent_btn.json")
         self.im_num = 0
         img_list = os.listdir('captures')
         self.local_images = list(
@@ -63,15 +63,45 @@ class GalleryScreen:
             (0, 0), (state["res"][0], state["res"][1])), self.img, manager=self.manager)
 
         self.back_btn = UIButton(pygame.Rect(
-            (0, 0), (100, 50)), text="Back", manager=self.manager)
-        self.next_btn = UIButton(pygame.Rect(
-            (state["res"][0] - 100, 0), (100, 50)), text="Next", manager=self.manager)
-        self.prev_btn = UIButton(pygame.Rect(
-            (state["res"][0] - 200, 0), (100, 50)), text="Prev", manager=self.manager)
-        self.delete_btn = UIButton(pygame.Rect(
-            (state["res"][0] - 300, 0), (100, 50)), text="Delete", manager=self.manager)
-        self.upload_btn = UIButton(pygame.Rect(
-            (state["res"][0] - 400, 0), (100, 50)), text="Upload", manager=self.manager)
+            (10, 10), (50, 50)), text="Back", manager=self.manager)
+        self.back_btn.normal_image = pygame.image.load("assets/back.png")
+        UIImage(self.back_btn.rect, self.back_btn.normal_image,
+                manager=self.manager)
+
+        next_btn_rect = pygame.Rect((0, 0), (50, 50))
+        next_btn_rect.bottomright = (state["res"][0]-10, state["res"][1]-10)
+        self.next_btn = UIButton(
+            next_btn_rect, text="Next", manager=self.manager)
+        self.next_btn.normal_image = pygame.transform.rotate(
+            pygame.image.load("assets/previous.png"), 180)
+        UIImage(self.next_btn.rect, self.next_btn.normal_image,
+                manager=self.manager)
+
+        prev_btn_rect = pygame.Rect((0, 0), (50, 50))
+        prev_btn_rect.bottomright = (
+            state["res"][0] - 65, state["res"][1] - 10)
+        self.prev_btn = UIButton(
+            prev_btn_rect, text="Prev", manager=self.manager)
+        self.prev_btn.normal_image = pygame.image.load("assets/previous.png")
+        UIImage(self.prev_btn.rect, self.prev_btn.normal_image,
+                manager=self.manager)
+
+        delete_btn_rect = pygame.Rect((0, 0), (50, 50))
+        delete_btn_rect.bottomleft = (10, state["res"][1]-10)
+        self.delete_btn = UIButton(
+            delete_btn_rect, text="Delete", manager=self.manager)
+        self.delete_btn.normal_image = pygame.image.load("assets/trash.png")
+        UIImage(self.delete_btn.rect,
+                self.delete_btn.normal_image, manager=self.manager)
+
+        upload_btn_rect = pygame.Rect((0, 0), (50, 50))
+        upload_btn_rect.topright = (state["res"][0]-10, 10)
+        self.upload_btn = UIButton(
+            upload_btn_rect, text="Upload", manager=self.manager)
+        self.upload_btn.normal_image = pygame.image.load("assets/upload.png")
+        UIImage(self.upload_btn.rect,
+                self.upload_btn.normal_image, manager=self.manager)
+
         self.img_counter = UILabel(pygame.Rect(
             (0, state["res"][1] - 50), (state["res"][0], 50)), text=f"Image {self.im_num+1} / {len(self.local_images)}", manager=self.manager)
 

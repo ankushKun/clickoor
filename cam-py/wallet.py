@@ -109,7 +109,7 @@ class WalletScreen:
     def setup(self):
         global wallet
         os.system("fuser -k 8080/tcp")
-        self.manager.get_theme().load_theme("pygame-themes/normal.json")
+        self.manager.get_theme().load_theme("pygame-themes/transparent_btn.json")
         self.wallet = None
         wallet = None
 

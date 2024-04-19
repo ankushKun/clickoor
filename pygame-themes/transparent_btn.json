@@ -3,8 +3,12 @@
         "colours": {
             "normal_bg": "#ffffff00",
             "normal_border": "#00000000",
-            "hover_bg": "#ffffff00",
-            "hover_border": "#00000000"
+            "hovered_bg": "#ffffff00",
+            "hovered_border": "#00000000",
+            "active_bg": "#ffffff50",
+            "active_border": "#00000000",
+            "selected_bg": "#ffffff50",
+            "selected_border": "#00000000"
         }
     }
 }
