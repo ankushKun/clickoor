@@ -21,7 +21,7 @@ class SettingsScreen:
         self.manager.get_theme().load_theme("pygame-themes/transparent_btn.json")
 
         back_rect = pygame.Rect((0, 0), (50, 50))
-        back_rect.topleft = (5, 5)
+        back_rect.topleft = (10, 10)
         self.back_btn = UIButton(back_rect, "Back", self.manager)
         self.back_btn.normal_image = pygame.image.load("assets/back.png")
         UIImage(back_rect, self.back_btn.normal_image, self.manager)
