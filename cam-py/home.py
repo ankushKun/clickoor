@@ -33,7 +33,7 @@ class HomeScreen:
         self.uploader = None
         self.status = ""
         self.exposure_times = {
-            # "1/10": 100000,
+            "1/15": 66666,
             "1/30": 33333,
             "1/60": 16666,
             "1/100": 10000,
@@ -44,6 +44,8 @@ class HomeScreen:
         self.selected_exposure: str = list(self.exposure_times.keys())[
             self.selected_exposure_idx]
         self.last_capture = datetime.now().timestamp()
+        self.capture_mode = "image"
+        self.recording = False
         try:
             self.shutter = Button(5, bounce_time=0.15)
             self.shutter.when_pressed = self.capture_and_save
@@ -157,12 +159,23 @@ class HomeScreen:
             "assets/settings.png")
         UIImage(settings_rect, self.open_settings_btn.normal_image, self.manager)
 
-        capture_rect = pygame.Rect((0, 0), (100, 100))
-        capture_rect.bottomright = (state["res"][0], state["res"][1]//2 + 50)
-        self.capture_btn = UIButton(capture_rect, "", self.manager)
+        capture_rect = pygame.Rect((0, 0), (75, 75))
+        capture_rect.right = state["res"][0] - 10
+        capture_rect.centery = state["res"][1]//2
+        self.capture_btn = UIButton(capture_rect, "capture", self.manager)
         self.capture_btn.normal_image = pygame.image.load("assets/shutter.png")
         self.capture_btn.border_width = 0
-        UIImage(capture_rect, self.capture_btn.normal_image, self.manager)
+        self.shutter_img = UIImage(
+            capture_rect, self.capture_btn.normal_image, self.manager)
+
+        mode_switch_rect = pygame.Rect((0, 0), (45, 45))
+        mode_switch_rect.topright = (state["res"][0]-5, 5)
+        self.mode_switch_btn = UIButton(
+            mode_switch_rect, "Mode", self.manager)
+        self.mode_switch_btn.normal_image = pygame.image.load(
+            "assets/record_stopped.png")
+        self.mode_img = UIImage(
+            mode_switch_rect, self.mode_switch_btn.normal_image, self.manager)
 
         gallery_rect = pygame.Rect((0, 0), (60, 60))
         gallery_rect.bottomright = (state["res"][0]-5, state["res"][1]-5)
@@ -213,7 +226,19 @@ class HomeScreen:
                 print("Switching to Wifi")
                 self.set_screen("Settings")
             elif btn == self.capture_btn:
-                self.capture_and_save()
+                if self.capture_mode == "image":
+                    self.capture_and_save()
+                elif self.capture_mode == "video":
+                    if self.recording:
+                        print("Stopping video")
+                        self.shutter_img.set_image(
+                            pygame.image.load("assets/record_stopped.png"))
+                        self.recording = False
+                    else:
+                        print("Recording video")
+                        self.shutter_img.set_image(
+                            pygame.image.load("assets/record_started.png"))
+                        self.recording = True
             elif btn == self.gallery_btn:
                 self.set_screen("Gallery")
             elif btn == self.shutter_speed_plus_btn:
@@ -234,6 +259,20 @@ class HomeScreen:
                         {"ExposureTime": self.exposure_times[self.selected_exposure]})
                     self.shutter_speed_label.set_text(
                         f"Shutter Speed: {self.selected_exposure}")
+            elif btn == self.mode_switch_btn:
+                if not self.recording:
+                    if self.capture_mode == "image":
+                        self.capture_mode = "video"
+                        self.mode_img.set_image(
+                            pygame.image.load("assets/shutter.png"))
+                        self.shutter_img.set_image(
+                            pygame.image.load("assets/record_stopped.png"))
+                    else:
+                        self.capture_mode = "image"
+                        self.mode_img.set_image(
+                            pygame.image.load("assets/record_stopped.png"))
+                        self.shutter_img.set_image(
+                            pygame.image.load("assets/shutter.png"))
 
     def run_non_event(self):
         self.image_surface.fill((30, 30, 30))
