@@ -2,7 +2,8 @@ import pygame
 from pygame import SurfaceType
 import pygame_gui
 from pygame_gui import UIManager
-from pygame_gui.elements import UITextEntryLine, UIButton, UILabel
+from pygame_gui.elements import UITextEntryLine, UIButton, UILabel, UIImage
+import pygame_gui.elements.ui_label
 from globals import state
 from lib.utils import connect_to_wifi, run_cmd, get_wifi_signal_strength
 
@@ -49,7 +50,7 @@ class WifiScreen:
         for i, row in enumerate(characters):
             for j, char in enumerate(row):
                 key_rect = pygame.Rect((0, 0), (50, 50))
-                key_rect.center = (j*50 + 50, i*50 + 275)
+                key_rect.center = (j*50 + 100, i*50 + 275)
                 key = UIButton(relative_rect=key_rect,
                                text=char[0], manager=self.manager)
                 self.keylist.append(key)
@@ -61,11 +62,10 @@ class WifiScreen:
 
         self.draw_keys()
 
-        conn_rect = pygame.Rect((0, 0), (400, -1))
+        conn_rect = pygame.Rect((0, 0), (-1, -1))
         conn_rect.topright = (state["res"][0], 0)
         self.conn_label = UILabel(
             conn_rect, f"Wifi: {self.wifi_name}", self.manager)
-        self.conn_label
 
         ssid_input_rect = pygame.Rect((0, 0), (200, 50))
         ssid_input_rect.center = (
@@ -85,8 +85,10 @@ class WifiScreen:
         self.conn_btn = UIButton(relative_rect=btn_rect,
                                  text='Connect', manager=self.manager)
 
-        self.back_btn = UIButton(pygame.Rect(
-            (0, 0), (100, 50)), "Back", self.manager)
+        back_btn_rect = pygame.Rect((10, 10), (50, 50))
+        self.back_btn = UIButton(back_btn_rect, "Back", self.manager)
+        self.back_btn.normal_image = pygame.image.load("assets/back.png")
+        UIImage(self.back_btn.rect, self.back_btn.normal_image, self.manager)
 
     def run(self, event):
         if event.type == pygame_gui.UI_BUTTON_PRESSED:

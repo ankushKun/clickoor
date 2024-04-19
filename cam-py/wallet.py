@@ -2,7 +2,7 @@ import subprocess
 import pygame
 from pygame import SurfaceType
 import pygame_gui
-from pygame_gui.elements import UILabel, UIButton, UIDropDownMenu
+from pygame_gui.elements import UILabel, UIButton, UIDropDownMenu, UIImage
 from pygame_gui import UIManager
 import arweave
 from flask import Flask, render_template, request, send_file
@@ -113,8 +113,11 @@ class WalletScreen:
         self.wallet = None
         wallet = None
 
-        self.back_btn = UIButton(pygame.Rect(
-            (0, 0), (100, 50)), text="Back", manager=self.manager)
+        back_btn_rect = pygame.Rect((10, 10), (50, 50))
+        self.back_btn = UIButton(back_btn_rect, "Back", self.manager)
+        self.back_btn.normal_image = pygame.image.load("assets/back.png")
+        UIImage(self.back_btn.rect, self.back_btn.normal_image, self.manager)
+
         self.addres_text = UILabel(pygame.Rect(
             (0, 50), (state["res"][0], 50)), text=self.wallet.address if self.wallet else 'NO WALLET', manager=self.manager)
         self.balance_text = UILabel(pygame.Rect(
