@@ -2,7 +2,7 @@ import pygame
 import pygame_gui
 from pygame_gui import UIManager
 from pygame_gui.elements import UIButton
-from globals import state
+from globals import state, get_config
 from wifi import WifiScreen
 from home import HomeScreen
 from settings import SettingsScreen
@@ -10,9 +10,16 @@ from wallet import WalletScreen
 from gallery import GalleryScreen
 from lib.utils import run_cmd
 
+
 class InfCam:
     def __init__(self):
-        run_cmd("xrandr -o inverted")
+        disp_orientation = get_config("orientation")
+        if disp_orientation == "Inverted":
+            run_cmd("wlr-randr --output DSI-1 --transform 180")
+            run_cmd("xrandr -o inverted")
+        else:
+            run_cmd("wlr-randr --output DSI-1 --transform 0")
+            run_cmd("xrandr -o normal")
         pygame.init()
         self.running = True
         self.screen_change = False
