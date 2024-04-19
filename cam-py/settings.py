@@ -20,7 +20,7 @@ class SettingsScreen:
     def setup(self):
         self.manager.get_theme().load_theme("pygame-themes/transparent_btn.json")
 
-        back_rect = pygame.Rect((0, 0), (60, 60))
+        back_rect = pygame.Rect((0, 0), (50, 50))
         back_rect.topleft = (5, 5)
         self.back_btn = UIButton(back_rect, "Back", self.manager)
         self.back_btn.normal_image = pygame.image.load("assets/back.png")
@@ -38,7 +38,7 @@ class SettingsScreen:
         # exit_rect.center = (state["res"][0]//2, state["res"][1]//2 + 100)
         # self.exit_btn = UIButton(exit_rect, "Exit", self.manager)
 
-        shutdown_rect = pygame.Rect((0, 0), (60, 60))
+        shutdown_rect = pygame.Rect((0, 0), (50, 50))
         shutdown_rect.topright = (state["res"][0] - 5, 5)
         self.shutdown_btn = UIButton(shutdown_rect, "Shutdown", self.manager)
         self.shutdown_btn.normal_image = pygame.image.load(
