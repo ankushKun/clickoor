@@ -40,7 +40,7 @@ class HomeScreen:
             "1/200": 5000,
             "1/250": 4000,
         }
-        self.selected_exposure_idx = 0
+        self.selected_exposure_idx = 2
         self.selected_exposure: str = list(self.exposure_times.keys())[
             self.selected_exposure_idx]
         self.last_capture = datetime.now().timestamp()
