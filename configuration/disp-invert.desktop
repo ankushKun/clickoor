@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Name=Invert Display
+Comment=Rotate 180 deg
+GenericName=Clickoor Camera
+Exec=bash /home/pi/clickoor/scripts/disp-invert.sh
+Icon=org.xfce.display
+Terminal=false
+StartupNotify=true
+Type=Application
+Categories=;
+MimeType=text/plain;

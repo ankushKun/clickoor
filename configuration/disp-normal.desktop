@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Name=Normal Display
+Comment=No Rotation 0 deg
+GenericName=Clickoor Camera
+Exec=bash /home/pi/clickoor/scripts/disp-normal.sh
+Icon=org.xfce.display
+Terminal=false
+StartupNotify=true
+Type=Application
+Categories=;
+MimeType=text/plain;
